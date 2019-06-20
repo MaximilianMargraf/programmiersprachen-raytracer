@@ -5,11 +5,11 @@
 
 class Shape{
 public:
-	virtual float area();
-	virtual float volume();
+	virtual float area() const = 0;
+	virtual float volume() const = 0;
+	virtual void printClassName() const{
+		std::cout<<"Shape Class Object\n";
+	}
 };
-
-
-
 
 #endif // SHAPE_HPP
