@@ -8,27 +8,27 @@
 
 class Shape{
 public:
-	Shape():
-		name_{""},
-		color{Color(0.0, 0.0, 0.0)}
-		{}
+	Shape();
+	Shape(std::string name, Color rgb);
 
-	Shape(std::string name, Color rgb):
-		name_{name},
-		color{rgb}
-		{}
 
 	virtual float area() const = 0;
 	virtual float volume() const = 0;
-	virtual void printClassName() const{
-		std::cout<<"Shape Class Object\n";
+	virtual std::ostream& print(std::ostream& os) const;
+
+	std::string getName() const {
+		return name_;
 	}
-	std::string getName(){return name_;};
-	Color getColor(){return color;};
+
+	Color getColor() const {
+		return color;
+	}
 
 protected:
 	std::string name_;
 	Color color;
 };
+
+std::ostream& operator<<(std::ostream& os, Shape const& s);
 
 #endif // SHAPE_HPP

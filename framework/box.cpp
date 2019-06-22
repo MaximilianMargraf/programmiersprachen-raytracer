@@ -73,3 +73,15 @@ float Box::volume() const{
 	float height = abs(max.z - min.z);
 	return length * width * height;
 }
+
+std::ostream& Box::print(std::ostream& os) const{
+	Shape::print(os);
+	os << "Min: "<<min.x<<", "<<min.y<<", "<<min.z<<
+		"\nMax: "<<max.x<<", "<<max.y<<", "<<max.z<<"\n";
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, Box const& s){
+	s.print(os);
+	return os;
+}

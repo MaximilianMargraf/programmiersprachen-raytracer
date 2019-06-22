@@ -17,13 +17,13 @@ public:
 
 	float area() const override;
 	float volume() const override;
-	void printClassName() const override{
-		std::cout<<"Box Class Object\n";
-	}
+	std::ostream& print(std::ostream& os) const override;
 
 private:
 	glm::vec3 min;
 	glm::vec3 max;
 };
+
+std::ostream& operator<<(std::ostream& os, Box const& s);
 
 #endif // BOX_HPP

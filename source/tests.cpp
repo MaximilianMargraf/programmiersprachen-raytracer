@@ -42,6 +42,7 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	REQUIRE(s4->volume() == Approx(0));
 	REQUIRE(s4->getName() == "Sphere 4");
 	REQUIRE(s4->getColor() == *red);
+	std::cout<<*s4<<"\n";
 }
 
 // task 5.2
@@ -82,7 +83,7 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b4->volume() == 12);
 	REQUIRE(b4->getName() == "Box 4");
 	REQUIRE(b4->getColor() == *red);
-
+	std::cout<<*b4<<"\n";
 }
 
 int main(int argc, char *argv[])

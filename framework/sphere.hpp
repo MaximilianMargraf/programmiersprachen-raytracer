@@ -17,13 +17,13 @@ public:
 
 	float area() const override;
 	float volume() const override;
-	void printClassName() const override{
-		std::cout<<"Sphere Class Object\n";
-	}
+	std::ostream& print(std::ostream& os) const override;
 
 private:
 	glm::vec3 center;
 	float radius;
 };
+
+std::ostream& operator<<(std::ostream& os, Sphere const& s);
 
 #endif // SPHERE_HPP
