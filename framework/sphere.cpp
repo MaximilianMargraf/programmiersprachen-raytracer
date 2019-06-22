@@ -27,5 +27,5 @@ float Sphere::area() const{
 }
 
 float Sphere::volume() const{
-	return 4/3*M_PI * radius * radius * radius;
+	return (4* M_PI * pow(radius, 3))/3;
 }
