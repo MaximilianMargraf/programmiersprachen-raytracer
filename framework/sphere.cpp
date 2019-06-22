@@ -1,11 +1,23 @@
 #include "sphere.hpp"
 
 Sphere::Sphere():
+	Shape(),
 	center{glm::vec3(0.0, 0.0, 0.0)},
 	radius{1}
 	{}
 
 Sphere::Sphere(glm::vec3 v, float r):
+	Shape(),
+	center{v},
+	radius{r}
+	{
+		if(r < 0){
+			radius = 0;
+		}
+	}
+
+Sphere::Sphere(glm::vec3 v, float r, std::string name, Color rgb):
+	Shape(name, rgb),
 	center{v},
 	radius{r}
 	{

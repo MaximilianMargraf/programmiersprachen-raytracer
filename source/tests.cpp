@@ -13,6 +13,9 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	REQUIRE(s1->getCenter() == glm::vec3(0.0, 0.0, 0.0));
 	REQUIRE(s1->area() == Approx(12.56637));
 	REQUIRE(s1->volume() == Approx(4.18879));
+	REQUIRE(s1->getName() == "");
+	REQUIRE(s1->getColor() == Color(0.0, 0.0, 0.0));
+
 	// test value constructor
 	glm::vec3 vect = glm::vec3(3.0, 3.0, 4.0);
 	float rad = 5;
@@ -29,6 +32,16 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	REQUIRE(s3->getCenter() == vect);
 	REQUIRE(s3->area() == Approx(0));
 	REQUIRE(s3->volume() == Approx(0));
+
+	// test sphere with color
+	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
+	std::unique_ptr<Sphere> s4(new Sphere(vect, rad, "Sphere 4", *red));
+	REQUIRE(s4->getRadius() == 0);
+	REQUIRE(s4->getCenter() == vect);
+	REQUIRE(s4->area() == Approx(0));
+	REQUIRE(s4->volume() == Approx(0));
+	REQUIRE(s4->getName() == "Sphere 4");
+	REQUIRE(s4->getColor() == *red);
 }
 
 // task 5.2
@@ -39,6 +52,8 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b1->getMax() == glm::vec3(1.0, 1.0, 1.0));
 	REQUIRE(b1->area() == 6);
 	REQUIRE(b1->volume() == 1);
+	REQUIRE(b1->getName() == "");
+	REQUIRE(b1->getColor() == Color(0.0, 0.0, 0.0));
 
 	// test value constructor
 	glm::vec3 min = glm::vec3(1.0, 1.0, 3.0);
@@ -57,6 +72,17 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b3->getMax() == min);
 	REQUIRE(b3->area() == 48);
 	REQUIRE(b3->volume() == 12);
+
+	// test box with additional shape param
+	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
+	std::unique_ptr<Box> b4(new Box(min, max, "Box 4", *red));
+	REQUIRE(b4->getMin() == max);
+	REQUIRE(b4->getMax() == min);
+	REQUIRE(b4->area() == 48);
+	REQUIRE(b4->volume() == 12);
+	REQUIRE(b4->getName() == "Box 4");
+	REQUIRE(b4->getColor() == *red);
+
 }
 
 int main(int argc, char *argv[])
