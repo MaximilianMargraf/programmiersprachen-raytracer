@@ -4,7 +4,9 @@ Sphere::Sphere():
 	Shape(),
 	center{glm::vec3(0.0, 0.0, 0.0)},
 	radius{1}
-	{}
+	{
+		std::cout<<"Called Sphere default constructor\n";
+	}
 
 Sphere::Sphere(glm::vec3 v, float r):
 	Shape(),
@@ -14,6 +16,7 @@ Sphere::Sphere(glm::vec3 v, float r):
 		if(r < 0){
 			radius = 0;
 		}
+		std::cout<<"Called Sphere value constructor\n";
 	}
 
 Sphere::Sphere(glm::vec3 v, float r, std::string name, Color rgb):
@@ -24,7 +27,12 @@ Sphere::Sphere(glm::vec3 v, float r, std::string name, Color rgb):
 		if(r < 0){
 			radius = 0;
 		}
+		std::cout<<"Called Sphere value constructor\n";
 	}
+
+Sphere::~Sphere(){
+	std::cout<<"Called Sphere destructor\n";
+}
 
 glm::vec3 Sphere::getCenter() const{
 	return center;

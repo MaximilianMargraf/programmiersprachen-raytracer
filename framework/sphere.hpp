@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/vec3.hpp>
-#include <iostream>
 #include <math.h>
 
 #include "hitpoint.hpp"
@@ -16,6 +15,7 @@ public:
 	Sphere();
 	Sphere(glm::vec3, float);
 	Sphere(glm::vec3, float, std::string, Color);
+	~Sphere();
 
 	glm::vec3 getCenter() const;
 	float getRadius() const;
