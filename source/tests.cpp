@@ -1,9 +1,13 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/intersect.hpp>
 
 #include "shape.hpp"
 #include "sphere.hpp"
 #include "box.hpp"
+#include "ray.hpp"
+#include "hitpoint.hpp"
 
 // task 5.2
 TEST_CASE ("Test sphere class", "[Sphere]"){
@@ -84,6 +88,54 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b4->getName() == "Box 4");
 	REQUIRE(b4->getColor() == *red);
 	std::cout<<*b4<<"\n";
+}
+
+TEST_CASE("intersect_ray_sphere", "[intersect]"){
+	// Ray
+	glm::vec3 ray_origin(0.0, 0.0, 0.0);
+	// Ray direction needs to be normalized v = glm::normalize(vector)
+	glm::vec3 ray_direction(0.0, 0.0, 1.0);
+	// Sphere
+	glm::vec3 sphere_center(0.0, 0.0, 5.0);
+	float sphere_radius(1.0);
+
+	float distance(0.0);
+
+	auto result = glm::intersectRaySphere(
+		ray_origin, ray_direction, sphere_center, pow(sphere_radius, 2), distance);
+
+	REQUIRE(distance == Approx(4.0));
+
+	// hit the sphere in the center
+	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
+	std::unique_ptr<Sphere> s1(new Sphere(sphere_center, sphere_radius, "Sphere 1", *red));
+	std::unique_ptr<Ray> r1(new Ray());
+	r1->origin = ray_origin;
+	r1->direction = ray_direction;
+	std::unique_ptr<HitPoint> h1(new HitPoint(s1->intersect(*r1)));
+	REQUIRE(h1->name == "Sphere 1");
+	REQUIRE(h1->color == *red);
+	REQUIRE(h1->intersected == true);
+	REQUIRE(h1->distance == Approx(4));
+
+	// hit the sphere right on the edge
+	sphere_center = glm::vec3(0, 1.0, 5.0);
+	std::unique_ptr<Sphere> s2(new Sphere(sphere_center, sphere_radius, "Sphere 2", *red));
+	std::unique_ptr<HitPoint> h2(new HitPoint(s2->intersect(*r1)));
+	REQUIRE(h2->intersected == true);
+	REQUIRE(h2->distance == Approx(5));
+
+	// hit the sphere somehwere in the middle
+	sphere_center = glm::vec3(0.5, 0.5, 5.0);
+	std::unique_ptr<Sphere> s3(new Sphere(sphere_center, sphere_radius, "Sphere 3", *red));
+	std::unique_ptr<HitPoint> h3(new HitPoint(s3->intersect(*r1)));
+	REQUIRE(h3->intersected == true);
+	REQUIRE(h3->distance == Approx(4.29289));
+
+	sphere_center = glm::vec3(1.0, 1.0, 5.0);
+	std::unique_ptr<Sphere> s4(new Sphere(sphere_center, sphere_radius, "Sphere 4", *red));
+	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1)));
+	REQUIRE(h4->intersected == false);
 }
 
 int main(int argc, char *argv[])
