@@ -19,8 +19,8 @@ Sphere::Sphere(glm::vec3 v, float r):
 		std::cout<<"Called Sphere value constructor\n";
 	}
 
-Sphere::Sphere(glm::vec3 v, float r, std::string name, Color rgb):
-	Shape(name, rgb),
+Sphere::Sphere(glm::vec3 v, float r, std::string name, std::shared_ptr<Material> mat):
+	Shape(name, mat),
 	center{v},
 	radius{r}
 	{
@@ -57,7 +57,7 @@ std::ostream& Sphere::print(std::ostream& os) const{
 	return os;
 }
 
-HitPoint Sphere::intersect(Ray const& ray){
+HitPoint Sphere::intersect(Ray const& ray, float const& fl){
 	HitPoint hp;
 
 	// vector between origin and center
@@ -90,7 +90,6 @@ HitPoint Sphere::intersect(Ray const& ray){
 	hp.intersection_point = intersection_point;
 
 	hp.name = name_;
-	hp.color = color;
 	hp.direction_vec = ray.direction;
 	hp.distance = sqrt(glm::dot(hp.intersection_point, intersection_point));
 

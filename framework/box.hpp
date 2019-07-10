@@ -10,7 +10,7 @@ class Box : public Shape{
 public:
 	Box();
 	Box(glm::vec3, glm::vec3);
-	Box(glm::vec3, glm::vec3, std::string name, Color);
+	Box(glm::vec3, glm::vec3, std::string name, std::shared_ptr<Material>);
 	~Box();
 
 	glm::vec3 getMin() const;
@@ -19,6 +19,8 @@ public:
 	float area() const override;
 	float volume() const override;
 	std::ostream& print(std::ostream& os) const override;
+
+	HitPoint intersect(Ray const&, float const& ) override;
 
 private:
 	glm::vec3 min;

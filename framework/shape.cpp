@@ -1,15 +1,14 @@
 #include "shape.hpp"
 
 Shape::Shape():
-	name_{""},
-	color{Color(0.0, 0.0, 0.0)}
+	name_{""}
 	{
 		std::cout<<"Called Shape default constructor\n";
 	}
 
-Shape::Shape(std::string name, Color rgb):
+Shape::Shape(std::string name, std::shared_ptr<Material> mat):
 	name_{name},
-	color{rgb}
+	material{mat}
 	{
 		std::cout<<"Called Shape value constructor\n";
 	}
@@ -20,7 +19,7 @@ Shape::~Shape(){
 
 std::ostream& Shape::print(std::ostream& os) const{
 	os <<"Name: "<<name_<<
-		"\nColor: R"<<color.r<<", G "<<color.g<<", B "<<color.b<<"\n";
+	"\nMaterial: "<< material;
 }
 
 std::ostream& operator<<(std::ostream& os, Shape const& s){

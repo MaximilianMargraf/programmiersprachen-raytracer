@@ -32,8 +32,8 @@ Box::Box(glm::vec3 v, glm::vec3 w):
 		std::cout<<"Called Box value constructor\n";
 	}
 
-Box::Box(glm::vec3 v, glm::vec3 w, std::string name, Color rgb):
-	Shape(name, rgb),
+Box::Box(glm::vec3 v, glm::vec3 w, std::string name, std::shared_ptr<Material> mat):
+	Shape(name, mat),
 	min{v},
 	max{w}
 	{
@@ -87,6 +87,12 @@ std::ostream& Box::print(std::ostream& os) const{
 	os << "Min: "<<min.x<<", "<<min.y<<", "<<min.z<<
 		"\nMax: "<<max.x<<", "<<max.y<<", "<<max.z<<"\n";
 	return os;
+}
+
+HitPoint Box::intersect(Ray const& ray, float const& fl){
+	HitPoint hp;
+
+	return hp;
 }
 
 std::ostream& operator<<(std::ostream& os, Box const& s){

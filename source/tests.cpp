@@ -2,12 +2,14 @@
 #include <catch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <memory>
 
+#include "box.hpp"
+#include "hitpoint.hpp"
+#include "material.hpp"
+#include "ray.hpp"
 #include "shape.hpp"
 #include "sphere.hpp"
-#include "box.hpp"
-#include "ray.hpp"
-#include "hitpoint.hpp"
 
 // task 5.2
 TEST_CASE ("Test sphere class", "[Sphere]"){
@@ -18,7 +20,6 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	REQUIRE(s1->area() == Approx(12.56637));
 	REQUIRE(s1->volume() == Approx(4.18879));
 	REQUIRE(s1->getName() == "");
-	REQUIRE(s1->getColor() == Color(0.0, 0.0, 0.0));
 
 	// test value constructor
 	glm::vec3 vect = glm::vec3(3.0, 3.0, 4.0);
@@ -38,14 +39,16 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	REQUIRE(s3->volume() == Approx(0));
 
 	// test sphere with color
-	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
-	std::unique_ptr<Sphere> s4(new Sphere(vect, rad, "Sphere 4", *red));
+	std::shared_ptr<Material> red(
+			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
+				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
+				4.0f));
+	std::unique_ptr<Sphere> s4(new Sphere(vect, rad, "Sphere 4", red));
 	REQUIRE(s4->getRadius() == 0);
 	REQUIRE(s4->getCenter() == vect);
 	REQUIRE(s4->area() == Approx(0));
 	REQUIRE(s4->volume() == Approx(0));
 	REQUIRE(s4->getName() == "Sphere 4");
-	REQUIRE(s4->getColor() == *red);
 	std::cout<<*s4<<"\n";
 }
 
@@ -58,7 +61,6 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b1->area() == 6);
 	REQUIRE(b1->volume() == 1);
 	REQUIRE(b1->getName() == "");
-	REQUIRE(b1->getColor() == Color(0.0, 0.0, 0.0));
 
 	// test value constructor
 	glm::vec3 min = glm::vec3(1.0, 1.0, 3.0);
@@ -79,14 +81,16 @@ TEST_CASE ("Test box class", "[box]"){
 	REQUIRE(b3->volume() == 12);
 
 	// test box with additional shape param
-	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
-	std::unique_ptr<Box> b4(new Box(min, max, "Box 4", *red));
+	std::shared_ptr<Material> red(
+			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
+				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
+				4.0f));
+	std::unique_ptr<Box> b4(new Box(min, max, "Box 4", red));
 	REQUIRE(b4->getMin() == max);
 	REQUIRE(b4->getMax() == min);
 	REQUIRE(b4->area() == 48);
 	REQUIRE(b4->volume() == 12);
 	REQUIRE(b4->getName() == "Box 4");
-	REQUIRE(b4->getColor() == *red);
 	std::cout<<*b4<<"\n";
 }
 
@@ -107,34 +111,36 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	REQUIRE(distance == Approx(4.0));
 
 	// hit the sphere in the center
-	std::unique_ptr<Color> red(new Color(1.0, 160.0/250.0, 122.0/255.0));
-	std::unique_ptr<Sphere> s1(new Sphere(sphere_center, sphere_radius, "Sphere 1", *red));
+	std::shared_ptr<Material> red(
+			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
+				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
+				4.0f));
+	std::unique_ptr<Sphere> s1(new Sphere(sphere_center, sphere_radius, "Sphere 1", red));
 	std::unique_ptr<Ray> r1(new Ray());
 	r1->origin = ray_origin;
 	r1->direction = ray_direction;
-	std::unique_ptr<HitPoint> h1(new HitPoint(s1->intersect(*r1)));
+	std::unique_ptr<HitPoint> h1(new HitPoint(s1->intersect(*r1, 0.0f)));
 	REQUIRE(h1->name == "Sphere 1");
-	REQUIRE(h1->color == *red);
 	REQUIRE(h1->intersected == true);
 	REQUIRE(h1->distance == Approx(4));
 
 	// hit the sphere right on the edge
 	sphere_center = glm::vec3(0, 1.0, 5.0);
-	std::unique_ptr<Sphere> s2(new Sphere(sphere_center, sphere_radius, "Sphere 2", *red));
-	std::unique_ptr<HitPoint> h2(new HitPoint(s2->intersect(*r1)));
+	std::unique_ptr<Sphere> s2(new Sphere(sphere_center, sphere_radius, "Sphere 2", red));
+	std::unique_ptr<HitPoint> h2(new HitPoint(s2->intersect(*r1, 0.0f)));
 	REQUIRE(h2->intersected == true);
 	REQUIRE(h2->distance == Approx(5));
 
 	// hit the sphere somehwere in the middle
 	sphere_center = glm::vec3(0.5, 0.5, 5.0);
-	std::unique_ptr<Sphere> s3(new Sphere(sphere_center, sphere_radius, "Sphere 3", *red));
-	std::unique_ptr<HitPoint> h3(new HitPoint(s3->intersect(*r1)));
+	std::unique_ptr<Sphere> s3(new Sphere(sphere_center, sphere_radius, "Sphere 3", red));
+	std::unique_ptr<HitPoint> h3(new HitPoint(s3->intersect(*r1, 0.0f)));
 	REQUIRE(h3->intersected == true);
 	REQUIRE(h3->distance == Approx(4.29289));
 
 	sphere_center = glm::vec3(1.0, 1.0, 5.0);
-	std::unique_ptr<Sphere> s4(new Sphere(sphere_center, sphere_radius, "Sphere 4", *red));
-	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1)));
+	std::unique_ptr<Sphere> s4(new Sphere(sphere_center, sphere_radius, "Sphere 4", red));
+	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1, 0.0f)));
 	REQUIRE(h4->intersected == false);
 }
 
