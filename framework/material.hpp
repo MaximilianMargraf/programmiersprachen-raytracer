@@ -2,6 +2,7 @@
 #define MATERIAL_HPP
 
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include "color.hpp"
@@ -9,11 +10,14 @@
 struct Material
 {
 	Material();
+	Material(std::string);
 	Material(std::string const& name_, Color const& ka_,
 		Color const& kd_, Color const& ks_, float m_);
 	~Material();
 
 	std::ostream& print(std::ostream& os) const;
+
+	bool operator ==(Material const& m);
 
 	//Variablen
 	std::string name;
@@ -25,4 +29,4 @@ struct Material
 
 std::ostream& operator <<(std::ostream& os, Material const& mat);
 
-#endif
+#endif // MATERIAL_HPP

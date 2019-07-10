@@ -7,7 +7,9 @@
 #include "box.hpp"
 #include "hitpoint.hpp"
 #include "material.hpp"
+#include "sdfloader.hpp"
 #include "ray.hpp"
+#include "scene.hpp"
 #include "shape.hpp"
 #include "sphere.hpp"
 
@@ -142,6 +144,29 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	std::unique_ptr<Sphere> s4(new Sphere(sphere_center, sphere_radius, "Sphere 4", red));
 	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1, 0.0f)));
 	REQUIRE(h4->intersected == false);
+}
+
+
+TEST_CASE("SDFloader & find functions", "[SDFloader]"){
+	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	Scene scene = sdfloader(filepath);
+
+	REQUIRE(scene.find_vec("orange") == nullptr);
+	REQUIRE(scene.find_vec("red") != nullptr);
+	REQUIRE(scene.find_vec("green") != nullptr);
+	REQUIRE(scene.find_vec("blue") != nullptr);
+
+	REQUIRE(scene.find_set("orange") == nullptr);
+	REQUIRE(scene.find_set("red") != nullptr);
+	REQUIRE(scene.find_set("green") != nullptr);
+	REQUIRE(scene.find_set("blue") != nullptr);
+
+	//REQUIRE(scene.find_set("red") < scene.find_set("green"));
+
+	REQUIRE(scene.find_map("orange") == nullptr);
+	REQUIRE(scene.find_map("red") != nullptr);
+	REQUIRE(scene.find_map("green") != nullptr);
+	REQUIRE(scene.find_map("blue") != nullptr);
 }
 
 int main(int argc, char *argv[])
