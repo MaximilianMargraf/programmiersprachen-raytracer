@@ -151,22 +151,24 @@ TEST_CASE("SDFloader & find functions", "[SDFloader]"){
 	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
 
-	REQUIRE(scene.find_vec("orange") == nullptr);
-	REQUIRE(scene.find_vec("red") != nullptr);
-	REQUIRE(scene.find_vec("green") != nullptr);
-	REQUIRE(scene.find_vec("blue") != nullptr);
+	// test if materials are there
+	REQUIRE(scene.find_material("orange") == nullptr);
+	REQUIRE(scene.find_material("red") != nullptr);
+	REQUIRE(scene.find_material("green") != nullptr);
+	REQUIRE(scene.find_material("blue") != nullptr);
 
-	REQUIRE(scene.find_set("orange") == nullptr);
-	REQUIRE(scene.find_set("red") != nullptr);
-	REQUIRE(scene.find_set("green") != nullptr);
-	REQUIRE(scene.find_set("blue") != nullptr);
+	// test sphere from txt file
+	REQUIRE(scene.find_shape("MegaSphere") == nullptr);
+	REQUIRE(scene.find_shape("Sphere1") != nullptr);
+	REQUIRE(scene.find_shape("Sphere1")->area() == Approx(12.56637));
+	REQUIRE(scene.find_shape("Sphere1")->volume() == Approx(4.18879));
+	REQUIRE(scene.find_shape("Sphere1")->getName() == "Sphere1");
+	REQUIRE(scene.find_shape("Sphere1")->getMaterialName() == "red");
 
-	//REQUIRE(scene.find_set("red") < scene.find_set("green"));
-
-	REQUIRE(scene.find_map("orange") == nullptr);
-	REQUIRE(scene.find_map("red") != nullptr);
-	REQUIRE(scene.find_map("green") != nullptr);
-	REQUIRE(scene.find_map("blue") != nullptr);
+	REQUIRE(scene.find_shape("Box1")->area() == 48);
+	REQUIRE(scene.find_shape("Box1")->volume() == 12);
+	REQUIRE(scene.find_shape("Box1")->getName() == "Box1");
+	REQUIRE(scene.find_shape("Box1")->getMaterialName() == "green");
 }
 
 int main(int argc, char *argv[])

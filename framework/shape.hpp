@@ -24,6 +24,10 @@ public:
 		return name_;
 	}
 
+	std::string getMaterialName() const{
+		return material->name;
+	}
+
 protected:
 	std::string name_;
 	std::shared_ptr<Material> material;

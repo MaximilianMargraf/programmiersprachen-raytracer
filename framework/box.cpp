@@ -4,9 +4,7 @@ Box::Box():
 	Shape(),
 	min{glm::vec3(0.0, 0.0, 0.0)},
 	max{glm::vec3(1.0, 1.0, 1.0)}
-	{
-		std::cout<<"Called Box default constructor\n";
-	}
+	{}
 
 Box::Box(glm::vec3 v, glm::vec3 w):
 	Shape(),
@@ -29,7 +27,6 @@ Box::Box(glm::vec3 v, glm::vec3 w):
 			max.z = min.z;
 			min.z = tmp;
 		}
-		std::cout<<"Called Box value constructor\n";
 	}
 
 Box::Box(glm::vec3 v, glm::vec3 w, std::string name, std::shared_ptr<Material> mat):
@@ -53,12 +50,9 @@ Box::Box(glm::vec3 v, glm::vec3 w, std::string name, std::shared_ptr<Material> m
 			max.z = min.z;
 			min.z = tmp;
 		}
-		std::cout<<"Called Box value constructor\n";
 	}
 
-Box::~Box(){
-	std::cout<<"Called Box destructor\n";
-}
+Box::~Box(){}
 
 glm::vec3 Box::getMin() const{
 	return min;

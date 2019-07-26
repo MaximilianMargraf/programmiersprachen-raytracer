@@ -25,9 +25,7 @@ Material::Material(std::string const& name_, Color const& ka_,
 	m{m_}
 	{}
 
-Material::~Material(){
-	std::cout<<"Called Material destructor\n";
-}
+Material::~Material(){}
 
 std::ostream& Material::print(std::ostream& os) const{
 	os <<"Name: "<< name << "\n"

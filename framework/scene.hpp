@@ -5,20 +5,20 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <set>
 
 #include "material.hpp"
+#include "shape.hpp"
 
 struct Scene{
-	std::shared_ptr<Material> find_vec(std::string const&) const;
-	std::shared_ptr<Material> find_set(std::string const&) const;
-	std::shared_ptr<Material> find_map(std::string const&) const;
+	std::shared_ptr<Material> find_material(std::string const&) const;
+	std::shared_ptr<Shape> find_shape(std::string const&) const;
+	//std::shared_ptr<Light> find_light(std::string const&) const;
+	//std::shared_ptr<Camera> find_camera(std::string const&) const;
 
-	std::vector<std::shared_ptr<Material>> mat_vec;
-	std::set<std::shared_ptr<Material> > mat_set;
-	std::map<std::string, std::shared_ptr<Material> > mat_map;
+	std::map<std::string, std::shared_ptr<Material> > material_map;
+	std::map<std::string, std::shared_ptr<Shape> > shape_map;
+	//std::map<std::string, std::shared_ptr<Light> > light_map;
+	//std::map<std::string, std::shared_ptr<Camera> > camera_map;
 };
-
-bool operator<(std::shared_ptr<Material> const& lhs, std::shared_ptr<Material> const& rhs);
 
 #endif // SCENE_HPP
