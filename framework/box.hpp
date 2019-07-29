@@ -2,6 +2,7 @@
 #define BOX_HPP
 
 #include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <math.h>
 
 #include "shape.hpp"
@@ -20,7 +21,7 @@ public:
 	float volume() const override;
 	std::ostream& print(std::ostream& os) const override;
 
-	HitPoint intersect(Ray const&, float const& ) override;
+	HitPoint intersect(Ray const&) override;
 
 private:
 	glm::vec3 min;

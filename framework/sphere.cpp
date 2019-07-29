@@ -51,7 +51,7 @@ std::ostream& Sphere::print(std::ostream& os) const{
 	return os;
 }
 
-HitPoint Sphere::intersect(Ray const& ray, float const& fl){
+HitPoint Sphere::intersect(Ray const& ray){
 	HitPoint hp;
 
 	// vector between origin and center
@@ -84,7 +84,7 @@ HitPoint Sphere::intersect(Ray const& ray, float const& fl){
 	hp.intersection_point = intersection_point;
 
 	hp.name = name_;
-	hp.direction_vec = ray.direction;
+	hp.direction = ray.direction;
 	hp.distance = sqrt(glm::dot(hp.intersection_point, intersection_point));
 
 	return hp;

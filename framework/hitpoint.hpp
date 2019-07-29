@@ -14,7 +14,7 @@ struct HitPoint
 		name{""},
 		color{Color(0.0, 0.0, 0.0)},
 		intersection_point{glm::vec3(0.0, 0.0, 0.0)},
-		direction_vec{glm::vec3(0.0, 0.0, 0.0)}
+		direction{glm::vec3(0.0, 0.0, 0.0)}
 		{}
 
 	bool intersected;
@@ -22,7 +22,7 @@ struct HitPoint
 	std::string name;
 	Color color;
 	glm::vec3 intersection_point;
-	glm::vec3 direction_vec;
+	glm::vec3 direction;
 };
 
 #endif // HITPOINT_HPP

@@ -18,7 +18,7 @@ public:
 	virtual float area() const = 0;
 	virtual float volume() const = 0;
 	virtual std::ostream& print(std::ostream& os) const;
-	virtual HitPoint intersect(Ray const&, float const&) = 0;
+	virtual HitPoint intersect(Ray const&) = 0;
 
 	std::string getName() const {
 		return name_;

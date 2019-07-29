@@ -121,7 +121,7 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	std::unique_ptr<Ray> r1(new Ray());
 	r1->origin = ray_origin;
 	r1->direction = ray_direction;
-	std::unique_ptr<HitPoint> h1(new HitPoint(s1->intersect(*r1, 0.0f)));
+	std::unique_ptr<HitPoint> h1(new HitPoint(s1->intersect(*r1)));
 	REQUIRE(h1->name == "Sphere 1");
 	REQUIRE(h1->intersected == true);
 	REQUIRE(h1->distance == Approx(4));
@@ -129,26 +129,26 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	// hit the sphere right on the edge
 	sphere_center = glm::vec3(0, 1.0, 5.0);
 	std::unique_ptr<Sphere> s2(new Sphere(sphere_center, sphere_radius, "Sphere 2", red));
-	std::unique_ptr<HitPoint> h2(new HitPoint(s2->intersect(*r1, 0.0f)));
+	std::unique_ptr<HitPoint> h2(new HitPoint(s2->intersect(*r1)));
 	REQUIRE(h2->intersected == true);
 	REQUIRE(h2->distance == Approx(5));
 
 	// hit the sphere somehwere in the middle
 	sphere_center = glm::vec3(0.5, 0.5, 5.0);
 	std::unique_ptr<Sphere> s3(new Sphere(sphere_center, sphere_radius, "Sphere 3", red));
-	std::unique_ptr<HitPoint> h3(new HitPoint(s3->intersect(*r1, 0.0f)));
+	std::unique_ptr<HitPoint> h3(new HitPoint(s3->intersect(*r1)));
 	REQUIRE(h3->intersected == true);
 	REQUIRE(h3->distance == Approx(4.29289));
 
 	sphere_center = glm::vec3(1.0, 1.0, 5.0);
 	std::unique_ptr<Sphere> s4(new Sphere(sphere_center, sphere_radius, "Sphere 4", red));
-	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1, 0.0f)));
+	std::unique_ptr<HitPoint> h4(new HitPoint(s4->intersect(*r1)));
 	REQUIRE(h4->intersected == false);
 }
 
 
 TEST_CASE("SDFloader & find functions", "[SDFloader]"){
-	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
 
 	// test if materials are there
