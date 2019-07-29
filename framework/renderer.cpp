@@ -50,12 +50,11 @@ void Renderer::render()
 	// horizontal image angle is the fovx of the camera
 	float a = scene.find_camera(cam)->fov_x;
 
-	// calculate last angle of triangle
-	float b = 90 - a/2;
 	// smallest distance from camera angle to image plane
-	float distance = sin(b)/(2*sin(a/2));
+	float distance = (width_/2)/tan((a/2)*M_PI / 180);
 
 	// List of Hitpoints, we need the one with the smallest distance
+	std::vector<HitPoint> hits;
 
 	for (unsigned y = 0; y < height_; ++y) {
 		for (unsigned x = 0; x < width_; ++x) {
@@ -63,7 +62,23 @@ void Renderer::render()
 			/*
 
 			for(auto c : scene.shape_map){
-				p.color = raytrace stuff	
+				p.color = raytrace stuff
+
+				for each shape{
+					if(h.intersected == true){
+						hits.insert(h);
+					}
+				}
+
+				for each HitPoint in hits{
+					HitPoint closest();
+					closest.distance = 9999;
+
+					if(HitPoint.distance < closest.distance){
+						closest = HitPoint;
+					}
+				}
+
 			}
 			*/
 
