@@ -4,13 +4,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <memory>
 #include <glm/vec3.hpp>
 
 #include "box.hpp"
 #include "color.hpp"
-//#include "light.hpp"
-//#include "camera.hpp"
+#include "light.hpp"
+#include "camera.hpp"
 #include "material.hpp"
 #include "scene.hpp"
 #include "shape.hpp"
@@ -32,7 +33,6 @@ Scene sdfloader(std::string const& filename)
 			std::string keyword;
 			ss>>keyword;
 
-			//material, name, ka, kd, ks input
 			if(keyword == "define"){
 				ss>>keyword;
 
@@ -64,10 +64,11 @@ Scene sdfloader(std::string const& filename)
 				}
 
 				if(keyword == "sphere"){
-					std::string name;
-					std::string mat;
-					float x, y, z;
-					float rad;
+					std::string name, mat;
+					float x, y, z, rad;
+
+					ss>>name;
+					ss>>mat;
 
 					ss>>x;
 					ss>>y;
@@ -75,17 +76,17 @@ Scene sdfloader(std::string const& filename)
 					glm::vec3 pos = glm::vec3(x, y, z);
 
 					ss>>rad;
-					ss>>name;
-					ss>>mat;
 
 					std::shared_ptr<Shape> sphere(new Sphere(pos, rad, name, scene.find_material(mat)));
 					scene.shape_map[name] = sphere;
 				}
 
 				if(keyword == "box"){
-					std::string name;
-					std::string mat;
+					std::string name, mat;
 					float x, y, z;
+
+					ss>>name;
+					ss>>mat;
 
 					ss>>x;
 					ss>>y;
@@ -97,17 +98,15 @@ Scene sdfloader(std::string const& filename)
 					ss>>z;
 					glm::vec3 max = glm::vec3(x, y, z);
 
-					ss>>name;
-					ss>>mat;
-
 					std::shared_ptr<Shape> box(new Box(min, max, name, scene.find_material(mat)));
 					scene.shape_map[name] = box;
 				}
 
-				/* Light not yet implemented
 				if(keyword == "light"){
 					std::string name;
 					float x, y, z, brightness;
+
+					ss>>name;
 
 					ss>>x;
 					ss>>y;
@@ -121,21 +120,27 @@ Scene sdfloader(std::string const& filename)
 
 					ss>>brightness;
 
-					std::shared_ptr<Light> light(new Light(name, pos, color, brightness);
+					std::shared_ptr<Light> light(new Light(name, pos, color, brightness));
 					scene.light_map[name] = light;
-				}*/
+				}
 
-				/* Camera not yet implemented
 				if(keyword == "camera"){
 					std::string name;
-					float fov-x;
+					float fov_x;
 
-					ss>>name
-					ss>>fov-x;
+					ss>>name;
+					ss>>fov_x;
 
-					std::shared_ptr<Camera> camera(new Camera(name, fov-x);
+					std::shared_ptr<Camera> camera(new Camera(name, fov_x));
 					scene.camera_map[name] = camera;
-				}*/
+				}
+			}// define keyword
+
+			if(keyword == "render"){
+				ss>>scene.cam_name;
+				ss>>scene.file_name;
+				ss>>scene.xres;
+				ss>>scene.yres;
 			}
 		}
 		myfile.close();

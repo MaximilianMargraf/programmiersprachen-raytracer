@@ -23,8 +23,7 @@ std::shared_ptr<Shape> Scene::find_shape(std::string const& name_) const{
 	return ptr;
 }
 
-/*
-std::shared_ptr<Light> Scene::find_shape(std::string const& name_) const{
+std::shared_ptr<Light> Scene::find_light(std::string const& name_) const{
 	// initally nullptr
 	std::shared_ptr<Light> ptr(nullptr);
 	auto it = light_map.find(name_);
@@ -33,10 +32,10 @@ std::shared_ptr<Light> Scene::find_shape(std::string const& name_) const{
 	}
 
 	return ptr;
-}*/
+}
 
-/*
-std::shared_ptr<Camera> Scene::find_shape(std::string const& name_) const{
+
+std::shared_ptr<Camera> Scene::find_camera(std::string const& name_) const{
 	// initally nullptr
 	std::shared_ptr<Camera> ptr(nullptr);
 	auto it = camera_map.find(name_);
@@ -45,4 +44,4 @@ std::shared_ptr<Camera> Scene::find_shape(std::string const& name_) const{
 	}
 
 	return ptr;
-}*/
+}

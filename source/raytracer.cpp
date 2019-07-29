@@ -6,27 +6,33 @@
 #include <utility>
 #include <cmath>
 
+#include "scene.hpp"
+#include "sdfloader.hpp"
+
 int main(int argc, char* argv[])
 {
-  unsigned const image_width = 800;
-  unsigned const image_height = 600;
-  std::string const filename = "./checkerboard.ppm";
+	unsigned const image_width = 800;
+	unsigned const image_height = 600;
+	std::string const filename = "./checkerboard.ppm";
 
-  Renderer renderer{image_width, image_height, filename};
+	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	Scene scene = sdfloader(filepath);
 
-  //create separate thread to see updates of pixels while rendering
-  std::thread render_thread([&renderer]() {renderer.render();});
+	Renderer renderer{image_width, image_height, filename};
 
-  Window window{{image_width, image_height}};
+	//create separate thread to see updates of pixels while rendering
+	std::thread render_thread([&renderer]() {renderer.render();});
 
-  while (!window.should_close()) {
-    if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-      window.close();
-    }
-    window.show(renderer.color_buffer());
-  }
+	Window window{{image_width, image_height}};
 
-  //"join" threads, i.e. synchronize main thread with render_thread
-  render_thread.join();
-  return 0;
+	while (!window.should_close()) {
+		if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+			window.close();
+		}
+		window.show(renderer.color_buffer());
+	}
+
+	//"join" threads, i.e. synchronize main thread with render_thread
+	render_thread.join();
+	return 0;
 }
