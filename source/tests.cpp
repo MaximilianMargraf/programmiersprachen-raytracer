@@ -96,6 +96,22 @@ TEST_CASE ("Test box class", "[box]"){
 	std::cout<<*b4<<"\n";
 }
 
+TEST_CASE("intersect_ray_box", "[intersect]"){
+  std::shared_ptr<Material> red(new Material());
+  Box box{glm::vec3{2,2,2}, glm::vec3{10,10,10}, "Kai_Uwe", red};
+
+  Ray ray1{glm::vec3{0.0f,0.0f,0.0f}, glm::vec3{1.0f, 1.0f, 1.0f}};
+  Ray ray2{glm::vec3{0.0f,0.0f,0.0f}, glm::vec3{0.0f, -1.0f, 0.0f}};
+
+  HitPoint hit = box.intersect(ray1);
+  HitPoint nohit = box.intersect(ray2); 
+
+  REQUIRE(hit.intersected == true);
+  REQUIRE(hit.name == "Kai_Uwe");
+  REQUIRE(nohit.intersected == false);
+  REQUIRE(nohit.name == "");
+}
+
 TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	// Ray
 	glm::vec3 ray_origin(0.0, 0.0, 0.0);
