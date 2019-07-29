@@ -9,7 +9,6 @@
 #include "camera.hpp"
 #include "light.hpp"
 #include "material.hpp"
-#include "renderer.hpp"
 #include "shape.hpp"
 
 struct Scene{

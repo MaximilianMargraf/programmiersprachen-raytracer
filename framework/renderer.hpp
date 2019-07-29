@@ -11,13 +11,14 @@
 #define BUW_RENDERER_HPP
 
 #include <cmath>
+#include <glm/glm.hpp>
+#include <string>
 
 #include "color.hpp"
+#include "hitpoint.hpp"
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
 #include "scene.hpp"
-#include <string>
-#include <glm/glm.hpp>
 
 class Renderer
 {

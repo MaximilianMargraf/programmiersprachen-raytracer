@@ -18,7 +18,8 @@ int main(int argc, char* argv[])
 	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
 
-	Renderer renderer{image_width, image_height, filename};
+	//Renderer renderer{image_width, image_height, filename};
+	Renderer renderer{scene};
 
 	//create separate thread to see updates of pixels while rendering
 	std::thread render_thread([&renderer]() {renderer.render();});
