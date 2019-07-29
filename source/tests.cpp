@@ -130,8 +130,8 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 
 	// hit the sphere in the center
 	std::shared_ptr<Material> red(
-			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
-				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
+			new Material("Red", Color(1.0, 160.0/255.0, 122.0/255.0),
+				Color(1.0, 160.0/255.0, 122.0/255.0), Color(1.0, 160.0/255.0, 122.0/255.0),
 				4.0f));
 	std::unique_ptr<Sphere> s1(new Sphere(sphere_center, sphere_radius, "Sphere 1", red));
 	std::unique_ptr<Ray> r1(new Ray());
