@@ -82,10 +82,10 @@ HitPoint Sphere::intersect(Ray const& ray){
 	glm::vec3 intersection_point = least_distance - (length * ray.direction);
 
 	hp.intersection_point = intersection_point;
-
 	hp.name = name_;
 	hp.direction = ray.direction;
 	hp.distance = sqrt(glm::dot(hp.intersection_point, intersection_point));
+	hp.mat = *material;
 
 	return hp;
 }

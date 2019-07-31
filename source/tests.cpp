@@ -9,7 +9,7 @@
 #include "material.hpp"
 #include "sdfloader.hpp"
 #include "ray.hpp"
-#include "scene.hpp"
+#include "renderer.hpp"
 #include "shape.hpp"
 #include "sphere.hpp"
 
@@ -164,27 +164,32 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 
 
 TEST_CASE("SDFloader & find functions", "[SDFloader]"){
-	std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
+	//std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
+	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
+	Renderer renderer{scene};
 
 	// test if materials are there
-	REQUIRE(scene.find_material("orange") == nullptr);
-	REQUIRE(scene.find_material("red") != nullptr);
-	REQUIRE(scene.find_material("green") != nullptr);
-	REQUIRE(scene.find_material("blue") != nullptr);
+	REQUIRE(renderer.scene.find_material("orange") == nullptr);
+	REQUIRE(renderer.scene.find_material("red") != nullptr);
+	REQUIRE(renderer.scene.find_material("green") != nullptr);
+	REQUIRE(renderer.scene.find_material("blue") != nullptr);
 
 	// test sphere from txt file
-	REQUIRE(scene.find_shape("MegaSphere") == nullptr);
-	REQUIRE(scene.find_shape("Sphere1") != nullptr);
-	REQUIRE(scene.find_shape("Sphere1")->area() == Approx(12.56637));
-	REQUIRE(scene.find_shape("Sphere1")->volume() == Approx(4.18879));
-	REQUIRE(scene.find_shape("Sphere1")->getName() == "Sphere1");
-	REQUIRE(scene.find_shape("Sphere1")->getMaterialName() == "red");
+	REQUIRE(renderer.scene.find_shape("MegaSphere") == nullptr);
+	REQUIRE(renderer.scene.find_shape("Sphere1") != nullptr);
+	REQUIRE(renderer.scene.find_shape("Sphere1")->area() == Approx(12.56637));
+	REQUIRE(renderer.scene.find_shape("Sphere1")->volume() == Approx(4.18879));
+	REQUIRE(renderer.scene.find_shape("Sphere1")->getName() == "Sphere1");
+	REQUIRE(renderer.scene.find_shape("Sphere1")->getMaterialName() == "red");
 
-	REQUIRE(scene.find_shape("Box1")->area() == 48);
-	REQUIRE(scene.find_shape("Box1")->volume() == 12);
-	REQUIRE(scene.find_shape("Box1")->getName() == "Box1");
-	REQUIRE(scene.find_shape("Box1")->getMaterialName() == "green");
+	REQUIRE(renderer.scene.find_shape("Box1")->area() == 48);
+	REQUIRE(renderer.scene.find_shape("Box1")->volume() == 12);
+	REQUIRE(renderer.scene.find_shape("Box1")->getName() == "Box1");
+	REQUIRE(renderer.scene.find_shape("Box1")->getMaterialName() == "green");
+
+	REQUIRE(renderer.scene.find_camera("eye")->name == "eye");
+	REQUIRE(renderer.scene.find_camera("eye")->position == glm::vec3(0.0, 0.0, 0.0));
 }
 
 int main(int argc, char *argv[])

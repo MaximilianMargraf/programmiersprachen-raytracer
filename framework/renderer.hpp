@@ -18,6 +18,7 @@
 #include "hitpoint.hpp"
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
+#include "ray.hpp"
 #include "scene.hpp"
 
 class Renderer
@@ -27,14 +28,15 @@ public:
   Renderer(Scene const& scene);
 
   void render();
-  void write(Pixel const& p);
+  void write(Pixel const&);
+  Color raytrace(Ray const&) const;
+  Color shade(HitPoint const&) const;
 
   inline std::vector<Color> const& color_buffer() const
   {
     return color_buffer_;
   }
 
-private:
   unsigned width_;
   unsigned height_;
   std::vector<Color> color_buffer_;

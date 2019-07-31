@@ -13,7 +13,7 @@ Shape::~Shape(){}
 
 std::ostream& Shape::print(std::ostream& os) const{
 	os <<"Name: "<<name_<<
-	"\nMaterial: "<< material;
+	"\nMaterial: "<< *material;
 }
 
 std::ostream& operator<<(std::ostream& os, Shape const& s){

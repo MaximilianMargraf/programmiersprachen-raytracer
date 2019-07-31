@@ -37,10 +37,11 @@ add_executable(tests
   ../framework/shape.cpp
   ../framework/sphere.cpp
   ../framework/box.cpp
-  ../framework/ray.hpp
+  ../framework/renderer.cpp
   ../framework/hitpoint.hpp
   tests.cpp)
-target_link_libraries(tests
+target_link_libraries(tests ${FRAMEWORK_NAME} ${LIBRARIES}
+  glfw
   ${GLFW_LIBRARIES}
   )
-
+add_dependencies(tests glfw ${FRAMEWORK_NAME} ${COPY_BINARY})
