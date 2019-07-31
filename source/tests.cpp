@@ -164,8 +164,8 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 
 
 TEST_CASE("SDFloader & find functions", "[SDFloader]"){
-	//std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
-	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
+	//std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
 	Renderer renderer{scene};
 
