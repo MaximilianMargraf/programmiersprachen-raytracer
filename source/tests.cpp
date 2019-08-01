@@ -12,6 +12,7 @@
 #include "renderer.hpp"
 #include "shape.hpp"
 #include "sphere.hpp"
+#include "triangle.hpp"
 
 // task 5.2
 TEST_CASE ("Test sphere class", "[Sphere]"){
@@ -112,6 +113,30 @@ TEST_CASE("intersect_ray_box", "[intersect]"){
   REQUIRE(nohit.name == "");
 }
 
+TEST_CASE("intersect_ray_triangle", "[intersect]"){
+  std::shared_ptr<Material> red(new Material());
+
+  glm::vec3 p1_= glm::vec3{-1.0, -1.0, -2.0};
+  glm::vec3 p2_ = glm::vec3{0.0, 1.0, -2.0};
+  glm::vec3 p3_ = glm::vec3{1.0, -1.0, -2.0};
+  std::unique_ptr<Triangle> t1(new Triangle(p3_, p2_, p1_, "Triangle1", red));
+
+  glm::vec3 p4_= glm::vec3{-10.0, -1.0, -2.0};
+  glm::vec3 p5_ = glm::vec3{-9.0, 1.0, -2.0};
+  glm::vec3 p6_ = glm::vec3{-8.0, -1.0, -2.0};
+  std::unique_ptr<Triangle> t2(new Triangle(p6_, p5_, p4_, "Triangle2", red));
+
+  Ray ray1{glm::vec3{0.0f,0.0f,0.0f}, glm::vec3{0.0f, 0.0f, -1.0f}};
+
+  HitPoint hit = t1->intersect(ray1);
+  HitPoint nohit = t2->intersect(ray1); 
+
+  REQUIRE(hit.intersected == true);
+  REQUIRE(hit.name == "Triangle1");
+  REQUIRE(nohit.intersected == false);
+  REQUIRE(nohit.name == "Triangle2");
+}
+
 TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	// Ray
 	glm::vec3 ray_origin(0.0, 0.0, 0.0);
@@ -164,11 +189,11 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 
 
 TEST_CASE("SDFloader & find functions", "[SDFloader]"){
-	std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
-	//std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	//std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files/scene.txt";
+	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
 	Scene scene = sdfloader(filepath);
 	Renderer renderer{scene};
-
+	
 	// test if materials are there
 	REQUIRE(renderer.scene.find_material("orange") == nullptr);
 	REQUIRE(renderer.scene.find_material("red") != nullptr);

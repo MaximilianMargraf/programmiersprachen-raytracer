@@ -1,12 +1,5 @@
 #include "light.hpp"
 
-Light::Light(std::string name_, glm::vec3 position_, Color color_, float brightness_):
-	name{name},
-	position{position_},
-	color{color_},
-	brightness{brightness}
-	{}
-
 std::ostream& Light::print(std::ostream& os) const{
 	os 
 	<<name

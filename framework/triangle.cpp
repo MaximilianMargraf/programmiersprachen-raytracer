@@ -21,7 +21,17 @@ Triangle::Triangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, std::string name, s
     p3_{p3}
     {}
 
-Triangle::~Triangle(){}
+Triangle::~Triangle(){
+
+}
+
+float Triangle::area() const{
+    return 1.0;
+}
+
+float Triangle::volume() const{
+    return 1.0;
+}
 
 std::ostream& Triangle::print(std::ostream& os) const{
 	Shape::print(os);
@@ -36,10 +46,11 @@ HitPoint Triangle::intersect(Ray const& ray){
     Ray norm;
     norm.direction = glm::normalize(ray.direction);
     float distance = 0.0f;
+    glm::vec3 dl;
 
-    hitpoint.intersected = glm::intersectRayTriangle(ray.origin, norm.direction, p1_, p2_, p3_, distance);
+    hitpoint.intersected = glm::intersectRayTriangle(ray.origin, norm.direction, p1_, p2_, p3_, dl);
     hitpoint.name = name_;
-    hitpoint.distance = distance;
+    //hitpoint.distance = distance;
 
     return hitpoint;
 }

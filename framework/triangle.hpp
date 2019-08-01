@@ -15,6 +15,10 @@ class Triangle : public Shape{
         Triangle();
         Triangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
         Triangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, std::string name, std::shared_ptr<Material> mat);
+        ~Triangle();
+
+        float area() const;
+        float volume() const;
 
         std::ostream& print(std::ostream& os) const override;
         HitPoint intersect(Ray const&) override;

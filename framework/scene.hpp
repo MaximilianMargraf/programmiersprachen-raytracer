@@ -14,12 +14,12 @@
 struct Scene{
 	std::shared_ptr<Material> find_material(std::string const&) const;
 	std::shared_ptr<Shape> find_shape(std::string const&) const;
-	std::shared_ptr<Light> find_light(std::string const&) const;
+	Light find_light(std::string const&) const;
 	std::shared_ptr<Camera> find_camera(std::string const&) const;
 
 	std::map<std::string, std::shared_ptr<Material> > material_map;
 	std::map<std::string, std::shared_ptr<Shape> > shape_map;
-	std::map<std::string, std::shared_ptr<Light> > light_map;
+	std::map<std::string, Light> light_map;
 	std::map<std::string, std::shared_ptr<Camera> > camera_map;
 
 	std::string cam_name;

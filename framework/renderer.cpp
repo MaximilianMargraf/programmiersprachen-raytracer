@@ -33,23 +33,6 @@ Renderer::Renderer(Scene const& scene_):
 void Renderer::render()
 {
 	std::cout<<"Starting rendering process\n";
-	/*
-	std::size_t const checker_pattern_size = 20;
-
-	for (unsigned y = 0; y < height_; ++y) {
-		for (unsigned x = 0; x < width_; ++x) {
-			Pixel p(x,y);
-			if ( ((x/checker_pattern_size)%2) != ((y/checker_pattern_size)%2)) {
-				p.color = Color(0.0, 1.0, float(x)/height_);
-			} else {
-				p.color = Color(1.0, 0.0, float(y)/width_);
-			}
-
-			write(p);
-		}
-	}
-	ppm_.save(filename_);*/
-
 	// calculate the distance of the camera to the near plane
 	// width of the image plan for calculation = 1
 	// horizontal image angle is the fovx of the camera
@@ -143,7 +126,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 	Color kd = hit.mat.ks;
 	Color ks = hit.mat.kd;
 
-	Color Sa = scene.find_light("Ambient")->color;
+	Color Sa = scene.find_light("Ambient").color;
 
 	Color L_amb = Sa * ka;
 

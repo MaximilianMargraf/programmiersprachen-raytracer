@@ -23,15 +23,14 @@ std::shared_ptr<Shape> Scene::find_shape(std::string const& name_) const{
 	return ptr;
 }
 
-std::shared_ptr<Light> Scene::find_light(std::string const& name_) const{
-	// initally nullptr
-	std::shared_ptr<Light> ptr(nullptr);
+Light Scene::find_light(std::string const& name_) const{
+	Light light;
 	auto it = light_map.find(name_);
 	if(it != light_map.end()){
-		ptr = it->second;
+		light = it->second;
 	}
 
-	return ptr;
+	return light;
 }
 
 

@@ -61,6 +61,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Material> mat(new Material(name, ka, kd, ks, specular));
 					scene.material_map[name] = mat;
+					std::cout<<"Loaded material: "<<name<<".\n";
 				}
 
 				if(keyword == "sphere"){
@@ -79,6 +80,8 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Shape> sphere(new Sphere(pos, rad, name, scene.find_material(mat)));
 					scene.shape_map[name] = sphere;
+					std::cout<<"Loaded sphere: "<<name<<".\n";
+
 				}
 
 				if(keyword == "box"){
@@ -100,6 +103,8 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Shape> box(new Box(min, max, name, scene.find_material(mat)));
 					scene.shape_map[name] = box;
+					std::cout<<"Loaded box: "<<name<<".\n";
+
 				}
 
 				if(keyword == "light"){
@@ -120,8 +125,15 @@ Scene sdfloader(std::string const& filename)
 
 					ss>>brightness;
 
-					std::shared_ptr<Light> light(new Light(name, pos, color, brightness));
+					Light light;
+					light.name = name;
+					light.position = pos;
+					light.color = color;
+					light.brightness = brightness;
+					std::cout<<"Light got its values.\n";
+
 					scene.light_map[name] = light;
+					std::cout<<"Loaded light: "<<name<<".\n";
 				}
 
 				if(keyword == "camera"){
@@ -133,6 +145,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Camera> camera(new Camera(name, fov_x));
 					scene.camera_map[name] = camera;
+					std::cout<<"Loaded camera: "<<name<<".\n";
 				}
 			}// define keyword
 
@@ -141,6 +154,7 @@ Scene sdfloader(std::string const& filename)
 				ss>>scene.file_name;
 				ss>>scene.xres;
 				ss>>scene.yres;
+				std::cout<<"Loaded renderer.\n";
 			}
 		}
 		myfile.close();
