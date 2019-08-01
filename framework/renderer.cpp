@@ -48,43 +48,24 @@ void Renderer::render()
 	float h = height_/2;
 	float w = width_/2;
 
+	// create ray through image plane
+	Ray shooty;
+	shooty.origin = scene.find_camera(scene.cam_name)->position;
+
 	// from bottom left to top right
 	for (unsigned y = 0; y < height_; ++y) {
-		std::cout<<"Y: "<<y<<"\n";
 		for (unsigned x = 0; x < width_; ++x) {
 			std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
 			Pixel p(x,y);
 
-			// create ray through image plane
-			Ray shooty;
-			shooty.origin = scene.find_camera(scene.cam_name)->position;
 			shooty.direction = glm::normalize(glm::vec3{w/width_, h/height_, -distance});
-			
-			p.color = raytrace(shooty);
-			/*
+			std::cout<<"Introduced the normalized direction\n";
 
-			for(auto c : scene.shape_map){
-				p.color = raytrace stuff
-
-				for each shape{
-					if(h.intersected == true){
-						hits.insert(h);
-					}
-				}
-
-				for each HitPoint in hits{
-					HitPoint closest();
-					closest.distance = 9999;
-
-					if(HitPoint.distance < closest.distance){
-						closest = HitPoint;
-					}
-				}
-
-			}
-			*/
-
+			//p.color = raytrace(shooty);
+			p.color = Color(0.0, 0.0, 0.0);
+			std::cout<<"R: "<<p.color.r<<", G: "<<p.color.g<<", B: "<<p.color.b<<"\n\n";
 			write(p);
+			std::cout<<"Written the pixel, now onto next.\n";
 		}
 	}
 	ppm_.save(filename_);
@@ -96,15 +77,17 @@ Color Renderer::raytrace(Ray const& ray) const{
 	Color px(0.0, 0.0, 0.0);
 	HitPoint hp, closest;
 	closest.distance = 9999.0;
-	std::cout<<"innitiate raytracing\n";
 
 	for(auto it = scene.shape_map.begin(); it != scene.shape_map.end(); it++){
 		hp = it->second->intersect(ray);
-		
+		std::cout<<"Check if Ray intersects with Shape: "<<hp.name<<"\n";
 		// if there was an actual intersection add the HitPoint to the vector
 		if(hp.intersected == true){
 			hits.push_back(hp);
 			std::cout<<"Elements in intersection list: "<<hits.size()<<"\n";
+		}
+		else{
+			std::cout<<hp.name<<"Did not intersect with Ray\n";
 		}
 	}
 
