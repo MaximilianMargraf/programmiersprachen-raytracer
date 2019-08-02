@@ -33,13 +33,11 @@ Renderer::Renderer(Scene const& scene_):
 void Renderer::render()
 {
 	std::cout<<"Starting rendering process\n";
-	// calculate the distance of the camera to the near plane
 	// width of the image plan for calculation = 1
 	// horizontal image angle is the fovx of the camera
 	std::cout<<"Camera name: "<<cam<<"\n";
 	float a = scene.find_camera(cam)->fov_x;
 	std::cout<<"Fov_x: "<<a<<"\n";
-
 
 	// smallest distance from camera angle to image plane
 	float distance = (width_/2)/tan((a/2)*M_PI / 180);
@@ -53,19 +51,24 @@ void Renderer::render()
 	shooty.origin = scene.find_camera(scene.cam_name)->position;
 
 	// from bottom left to top right
-	for (unsigned y = 0; y < height_; ++y) {
-		for (unsigned x = 0; x < width_; ++x) {
+	// botom left is -(width/2)/width
+	for (unsigned y = 0; y <= height_; ++y) {
+		for (unsigned x = 0; x <= width_; ++x) {
 			std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
 			Pixel p(x,y);
 
-			shooty.direction = glm::normalize(glm::vec3{w/width_, h/height_, -distance});
-			std::cout<<"Introduced the normalized direction\n";
+			// determine direction of ray
+			// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
+			shooty.direction = glm::vec3{(x-w)/width_, (y-h)/height_, -distance};
+			std::cout<<"Direction: "<<shooty.direction.x<<", "<<shooty.direction.y<<", "<<shooty.direction.z<<"\n";
+			shooty.direction = glm::normalize(shooty.direction);
+			std::cout<<"Direction normalized: "<<shooty.direction.x<<", "<<shooty.direction.y<<", "<<shooty.direction.z<<"\n";
 
 			//p.color = raytrace(shooty);
 			p.color = Color(0.0, 0.0, 0.0);
-			std::cout<<"R: "<<p.color.r<<", G: "<<p.color.g<<", B: "<<p.color.b<<"\n\n";
+			std::cout<<"R: "<<p.color.r<<", G: "<<p.color.g<<", B: "<<p.color.b<<"\n";
 			write(p);
-			std::cout<<"Written the pixel, now onto next.\n";
+			std::cout<<"Written the pixel, now onto next.\n\n";
 		}
 	}
 	ppm_.save(filename_);
@@ -91,11 +94,18 @@ Color Renderer::raytrace(Ray const& ray) const{
 		}
 	}
 
-	// only HitPoint with closest distance needed
-	for(auto h : hits){
-		if(h.distance <= closest.distance){
-			closest = h;
+	if(hits.size()>0){
+		// only HitPoint with closest distance needed
+		for(auto h : hits){
+			if(h.distance <= closest.distance){
+				closest = h;
+			}
 		}
+	}
+	// if there are no hitpoints in the 
+	else{
+		px = scene.find_light("Ambient").color;
+		return px;
 	}
 
 	// now closest is the hitpoint with the smallest distance to camera, we use it for color calculation
