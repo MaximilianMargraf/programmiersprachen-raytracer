@@ -111,7 +111,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 
 	Color Sa = scene.find_light("Ambient").color;
 
-	Color L_amb = ka;
+	Color L_amb = Sa * ka;
 	return L_amb;
 }
 
