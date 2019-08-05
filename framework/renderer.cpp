@@ -118,6 +118,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 	HitPoint hp;
 	float light_norm_angle;
 	float norm_cam_angle;
+	glm::vec3 direction_inverted = -hit.direction;
 	std::vector<Light> lights_reached;
 	std::vector<float> light_norm_angle_vec;
 	std::vector<float> norm_cam_angle_vec;
@@ -144,8 +145,8 @@ Color Renderer::shade(HitPoint const& hit) const{
 				light_norm_angle_vec.push_back(light_norm_angle);
 
 				glm::vec3 reflection = 2.0f * light_norm_angle * hit.normal - lightvec;
-				norm_cam_angle = std::max(0.0f, glm::dot(reflection, hit.normal));
-				norm_cam_angle_vec.push_back(norm_cam_angle);
+				norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
+				norm_cam_angle_vec.push_back(pow((norm_cam_angle), hit.material->m));
 			}
 		}
 	}
