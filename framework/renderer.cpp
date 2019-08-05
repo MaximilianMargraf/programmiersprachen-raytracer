@@ -52,23 +52,18 @@ void Renderer::render()
 
 	// from bottom left to top right
 	// botom left is -(width/2)/width
-	for (unsigned y = 0; y <= height_; ++y) {
-		for (unsigned x = 0; x <= width_; ++x) {
-			std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
+	for (unsigned y = 0; y < height_; ++y) {
+		for (unsigned x = 0; x < width_; ++x) {
+			//std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
 			Pixel p(x,y);
 
 			// determine direction of ray
 			// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
 			shooty.direction = glm::vec3{(x-w)/width_, (y-h)/height_, -distance};
-			std::cout<<"Direction: "<<shooty.direction.x<<", "<<shooty.direction.y<<", "<<shooty.direction.z<<"\n";
 			shooty.direction = glm::normalize(shooty.direction);
-			std::cout<<"Direction normalized: "<<shooty.direction.x<<", "<<shooty.direction.y<<", "<<shooty.direction.z<<"\n";
 
-			//p.color = raytrace(shooty);
-			p.color = Color(0.0, 0.0, 0.0);
-			std::cout<<"R: "<<p.color.r<<", G: "<<p.color.g<<", B: "<<p.color.b<<"\n";
+			p.color = raytrace(shooty);
 			write(p);
-			std::cout<<"Written the pixel, now onto next.\n\n";
 		}
 	}
 	ppm_.save(filename_);
@@ -83,46 +78,40 @@ Color Renderer::raytrace(Ray const& ray) const{
 
 	for(auto it = scene.shape_map.begin(); it != scene.shape_map.end(); it++){
 		hp = it->second->intersect(ray);
-		std::cout<<"Check if Ray intersects with Shape: "<<hp.name<<"\n";
 		// if there was an actual intersection add the HitPoint to the vector
 		if(hp.intersected == true){
 			hits.push_back(hp);
-			std::cout<<"Elements in intersection list: "<<hits.size()<<"\n";
-		}
-		else{
-			std::cout<<hp.name<<"Did not intersect with Ray\n";
 		}
 	}
 
+	// only HitPoint with closest distance needed
 	if(hits.size()>0){
-		// only HitPoint with closest distance needed
 		for(auto h : hits){
 			if(h.distance <= closest.distance){
 				closest = h;
 			}
 		}
 	}
-	// if there are no hitpoints in the 
+	// if there are no hitpoints in the list give ambient color
 	else{
 		px = scene.find_light("Ambient").color;
 		return px;
 	}
 
+	hits.clear();
 	// now closest is the hitpoint with the smallest distance to camera, we use it for color calculation
 	px = shade(closest);
-
 	return px;
 }
 
 Color Renderer::shade(HitPoint const& hit) const{
-	Color ka = hit.mat.ka;
-	Color kd = hit.mat.ks;
-	Color ks = hit.mat.kd;
+	Color ka = hit.material->ka;
+	Color kd = hit.material->ks;
+	Color ks = hit.material->kd;
 
 	Color Sa = scene.find_light("Ambient").color;
 
-	Color L_amb = Sa * ka;
-
+	Color L_amb = ka;
 	return L_amb;
 }
 

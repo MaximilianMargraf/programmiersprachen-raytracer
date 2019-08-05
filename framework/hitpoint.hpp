@@ -8,23 +8,13 @@
 
 struct HitPoint
 {
-	HitPoint():
-		intersected{false},
-		distance{0.0},
-		name{""},
-		mat{Material("",{0,0,0},{0,0,0},{0,0,0}, 0)},
-		intersection_point{glm::vec3(0.0, 0.0, 0.0)},
-		direction{glm::vec3(0.0, 0.0, 0.0)},
-		normal{glm::vec3(0.0, 0.0, 0.0)}
-		{}
-
-	bool intersected;
-	float distance;
-	std::string name;
-	Material mat;
-	glm::vec3 intersection_point;
-	glm::vec3 direction;
-	glm::vec3 normal;
+	bool intersected = false;
+	float distance = 0.0;
+	std::string name = "";
+	std::shared_ptr<Material> material = nullptr;
+	glm::vec3 intersection_point = glm::vec3{0.0, 0.0, 0.0};
+	glm::vec3 direction = glm::vec3{0.0, 0.0, 0.0};
+	glm::vec3 normal = glm::vec3{0.0, 0.0, 0.0};
 };
 
 #endif // HITPOINT_HPP

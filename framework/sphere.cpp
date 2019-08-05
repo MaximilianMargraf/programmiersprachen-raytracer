@@ -59,7 +59,7 @@ HitPoint Sphere::intersect(Ray const& ray){
 
     hitpoint.intersected = glm::intersectRaySphere(ray.origin, norm.direction, center, radius * radius, distance);
     hitpoint.name = name_;
-    //hitpoint.color = color_;
+    hitpoint.material = material;
     hitpoint.distance = distance;
 
     return hitpoint;

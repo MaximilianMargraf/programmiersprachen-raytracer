@@ -11,8 +11,6 @@
 
 int main(int argc, char* argv[])
 {
-	unsigned const image_width = 800;
-	unsigned const image_height = 600;
 	std::string const filename = "./sphere.ppm";
 
 	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
@@ -24,7 +22,7 @@ int main(int argc, char* argv[])
 	//create separate thread to see updates of pixels while rendering
 	std::thread render_thread([&renderer]() {renderer.render();});
 
-	Window window{{image_width, image_height}};
+	Window window{{renderer.scene.xres, renderer.scene.yres}};
 
 	while (!window.should_close()) {
 		if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {

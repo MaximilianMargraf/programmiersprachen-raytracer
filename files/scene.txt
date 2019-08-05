@@ -1,8 +1,7 @@
 define material red 1 0 0 1 0 0 1 0 0 20
 define material green 0 1 0 0 1 0 0 1 0 50
 define material blue 0 0 1 0 0 1 0 0 1 10
-define sphere Sphere1 red 0 0 5 1
-define box Box1 green 1 1 3 3 3 6
+define sphere Sphere1 red 0 0 -1000 0.5
 define light Ambient 10 10 10 0.1 0.1 0.1 10
 define camera eye 45.0
 render eye image.ppm 400 400
