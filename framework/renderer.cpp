@@ -116,6 +116,11 @@ Color Renderer::shade(HitPoint const& hit) const{
 	float bias = 0.01;
 
 	HitPoint hp;
+	float light_norm_angle;
+	float norm_cam_angle;
+	std::vector<Light> lights_reached;
+	std::vector<float> light_norm_angle_vec;
+	std::vector<float> norm_cam_angle_vec;
 
 	// for every light in the scene 
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
@@ -129,14 +134,29 @@ Color Renderer::shade(HitPoint const& hit) const{
 		lightray.direction = glm::normalize(lightvec);
 
 		// iterate over all shapes to see if there is a shape between intersection and light
-		
 		for(auto jt = scene.shape_map.begin(); jt != scene.shape_map.end(); jt++){
 			hp = jt->second->intersect(lightray);
-		}
 
-		Color sd = kd * (scene.find_light("Diffuse").color * scene.find_light("Diffuse").brightness) * glm::dot(lightvec, hit.normal);
-		ltotal += sd;
+			// if there was no intersection
+			if(hp.intersected == false){
+				lights_reached.push_back(it->second);
+				light_norm_angle = std::max(0.0f, glm::dot(hit.normal, lightvec));
+				light_norm_angle_vec.push_back(light_norm_angle);
+
+				glm::vec3 reflection = 2.0f * light_norm_angle * hit.normal - lightvec;
+				norm_cam_angle = std::max(0.0f, glm::dot(reflection, hit.normal));
+				norm_cam_angle_vec.push_back(norm_cam_angle);
+			}
+		}
 	}
+
+	// onto specular light, formula from the scripts for multiple light sources
+	Color ss{0.0,0.0,0.0};
+	for(int i = 0; i < lights_reached.size(); i++){
+		ss += lights_reached[i].color * lights_reached[i].brightness *
+						(kd * light_norm_angle_vec[i] + ks * norm_cam_angle_vec[i]);
+	}
+	ltotal += ss;
 	return ltotal;
 }
 

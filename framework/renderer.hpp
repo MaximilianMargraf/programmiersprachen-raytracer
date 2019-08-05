@@ -11,6 +11,7 @@
 #define BUW_RENDERER_HPP
 
 #include <cmath>
+#include <algorithm>
 #include <glm/glm.hpp>
 #include <string>
 
