@@ -61,6 +61,15 @@ struct Color
     return tmp;
   }
 
+  friend Color operator*(Color const& a, float b)
+  {
+    Color tmp(0,0,0);
+    tmp.r = a.r*b;
+    tmp.g = a.g*b;
+    tmp.b = a.b*b;
+    return tmp;
+  }
+
   friend bool operator==(Color const& a, Color const& b)
   {
     if(a.r == b.r && a.g == b.g && a.b == b.b){

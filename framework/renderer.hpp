@@ -19,6 +19,7 @@
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
 #include "ray.hpp"
+#include "hitpoint.hpp"
 #include "scene.hpp"
 
 class Renderer

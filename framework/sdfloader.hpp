@@ -156,6 +156,16 @@ Scene sdfloader(std::string const& filename)
 				ss>>scene.yres;
 				std::cout<<"Loaded renderer.\n";
 			}
+
+			if(keyword == "ambient"){
+				float x, y, z;
+				ss>>x;
+				ss>>y;
+				ss>>z;
+				Color color(x, y, z);
+				scene.ambient = color;
+				std::cout<<"Loaded ambient light.\n";
+			}
 		}
 		myfile.close();
 	}

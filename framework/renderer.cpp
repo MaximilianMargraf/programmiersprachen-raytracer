@@ -94,7 +94,7 @@ Color Renderer::raytrace(Ray const& ray) const{
 	}
 	// if there are no hitpoints in the list give ambient color
 	else{
-		px = scene.find_light("Ambient").color;
+		px = scene.ambient;
 		return px;
 	}
 
@@ -109,10 +109,35 @@ Color Renderer::shade(HitPoint const& hit) const{
 	Color kd = hit.material->ks;
 	Color ks = hit.material->kd;
 
-	Color Sa = scene.find_light("Ambient").color;
+	// Color of ambient light is simply multiplied with the c. of the material
+	Color ltotal = scene.ambient * ka;
 
-	Color L_amb = Sa * ka;
-	return L_amb;
+	// for diffuse lighting we need the normal of the point as well as the vector to the light
+	float bias = 0.01;
+
+	HitPoint hp;
+
+	// for every light in the scene 
+	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
+		// vector to the light
+		glm::vec3 lightvec = it->second.position - hit.intersection_point;
+
+		// ray from the intersection point to the light source to check shadows
+		Ray lightray;
+		// move the hitpoint slightly from the actual object for better calculations
+		lightray.origin = hit.intersection_point + hit.normal * bias;
+		lightray.direction = glm::normalize(lightvec);
+
+		// iterate over all shapes to see if there is a shape between intersection and light
+		
+		for(auto jt = scene.shape_map.begin(); jt != scene.shape_map.end(); jt++){
+			hp = jt->second->intersect(lightray);
+		}
+
+		Color sd = kd * (scene.find_light("Diffuse").color * scene.find_light("Diffuse").brightness) * glm::dot(lightvec, hit.normal);
+		ltotal += sd;
+	}
+	return ltotal;
 }
 
 void Renderer::write(Pixel const& p)

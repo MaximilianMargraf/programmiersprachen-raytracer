@@ -53,14 +53,14 @@ std::ostream& Sphere::print(std::ostream& os) const{
 
 HitPoint Sphere::intersect(Ray const& ray){
     HitPoint hitpoint;
-    Ray norm;
-    norm.direction = glm::normalize(ray.direction);
     float distance = 0.0f;
 
-    hitpoint.intersected = glm::intersectRaySphere(ray.origin, norm.direction, center, radius * radius, distance);
+    hitpoint.intersected = glm::intersectRaySphere(ray.origin, glm::normalize(ray.direction), center, radius * radius, distance);
     hitpoint.name = name_;
     hitpoint.material = material;
     hitpoint.distance = distance;
+    hitpoint.intersection_point = distance * glm::normalize(ray.direction);
+    hitpoint.normal =  hitpoint.intersection_point - center;
 
     return hitpoint;
 }
