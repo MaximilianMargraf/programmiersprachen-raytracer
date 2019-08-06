@@ -13,7 +13,8 @@ int main(int argc, char* argv[])
 {
 	std::string const filename = "./sphere.ppm";
 
-	std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	//std::string filepath = "/home/lyrrok/Documents/programmiersprachen-raytracer/files/scene.txt";
+	std::string filepath = "/home/eric/Programmiersprachen_Uebungen/raytracer-collab/programmiersprachen-raytracer/files";
 	Scene scene = sdfloader(filepath);
 
 	Renderer renderer{scene};
