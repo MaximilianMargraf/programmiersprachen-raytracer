@@ -84,66 +84,74 @@ std::ostream& Box::print(std::ostream& os) const{
 }
 
 HitPoint Box::intersect(Ray const& r){
-    Ray n{r};
-    HitPoint hit{};
-    bool intersected = false;
+	Ray n{r};
+	HitPoint hit;
+	bool intersected = false;
 
-    float t = (min.x-n.origin.x)/(glm::normalize(n.direction)).x;
-    glm::vec3 p_x = n.origin + t*(glm::normalize(n.direction)); 
-    
-    if(p_x.y <= max.y && p_x.y >= min.y
-    && p_x.z <= max.z && p_x.z >= min.z){
-        intersected = true;
-    }
+	float t = (min.x-n.origin.x)/(glm::normalize(n.direction)).x;
+	glm::vec3 p_x = n.origin + t*(glm::normalize(n.direction)); 
+	
+	if(p_x.y <= max.y && p_x.y >= min.y
+	&& p_x.z <= max.z && p_x.z >= min.z){
+		intersected = true;
+	hit.normal = glm::vec3{1.0, 0.0, 0.0};
+	}
 
-    float t_maxx = (max.x-n.origin.x)/(glm::normalize(n.direction)).x;
-    glm::vec3 p_x2 = n.origin + t_maxx*(glm::normalize(n.direction)); 
-    
-    if(p_x2.y <= max.y && p_x2.y >= min.y
-    && p_x2.z <= max.z && p_x2.z >= min.z){
-        intersected = true;
-    }
+	float t_maxx = (max.x-n.origin.x)/(glm::normalize(n.direction)).x;
+	glm::vec3 p_x2 = n.origin + t_maxx*(glm::normalize(n.direction)); 
+	
+	if(p_x2.y <= max.y && p_x2.y >= min.y
+	&& p_x2.z <= max.z && p_x2.z >= min.z){
+		intersected = true;
+	hit.normal = glm::vec3{-1.0, 0.0, 0.0};
+	}
 
-    float t_miny = (min.y-n.origin.y)/(glm::normalize(n.direction)).y;
-    glm::vec3 p_y = n.origin + t_miny*(glm::normalize(n.direction)); 
-    
-    if(p_y.x <= max.x && p_y.x >= min.x
-    && p_y.z <= max.z && p_y.z >= min.z){
-        intersected = true;
-    }
+	float t_miny = (min.y-n.origin.y)/(glm::normalize(n.direction)).y;
+	glm::vec3 p_y = n.origin + t_miny*(glm::normalize(n.direction)); 
+	
+	if(p_y.x <= max.x && p_y.x >= min.x
+	&& p_y.z <= max.z && p_y.z >= min.z){
+		intersected = true;
+	hit.normal = glm::vec3{0.0, 1.0, 0.0};
+	}
 
-    float t_maxy = (max.y-n.origin.y)/(glm::normalize(n.direction)).y;
-    glm::vec3 p_y2 = n.origin + t_maxy*(glm::normalize(n.direction)); 
-    
-    if(p_y2.x <= max.x && p_y2.x >= min.x
-    && p_y2.z <= max.z && p_y2.z >= min.z){
-        intersected = true;
-    }
-    
-    float t_minz = (min.z-n.origin.z)/(glm::normalize(n.direction)).z;
-    glm::vec3 p_z = n.origin + t_minz*(glm::normalize(n.direction)); 
-    
-    if(p_z.y <= max.y && p_z.y >= min.y
-    && p_z.x <= max.x && p_z.x >= min.x){
-        intersected = true;
-    }
+	float t_maxy = (max.y-n.origin.y)/(glm::normalize(n.direction)).y;
+	glm::vec3 p_y2 = n.origin + t_maxy*(glm::normalize(n.direction)); 
+	
+	if(p_y2.x <= max.x && p_y2.x >= min.x
+	&& p_y2.z <= max.z && p_y2.z >= min.z){
+		intersected = true;
+	hit.normal = glm::vec3{0.0, -1.0, 0.0};
+	}
+	
+	float t_minz = (min.z-n.origin.z)/(glm::normalize(n.direction)).z;
+	glm::vec3 p_z = n.origin + t_minz*(glm::normalize(n.direction)); 
+	
+	if(p_z.y <= max.y && p_z.y >= min.y
+	&& p_z.x <= max.x && p_z.x >= min.x){
+		intersected = true;
+	hit.normal = glm::vec3{0.0, 0.0, 1.0};
+	}
 
-    float t_maxz = (max.z-n.origin.z)/(glm::normalize(n.direction)).z;
-    glm::vec3 p_z2 = n.origin + t_maxz*(glm::normalize(n.direction)); 
-    
-    if(p_z2.y <= max.y && p_z2.y >= min.y
-    && p_z2.x <= max.x && p_z2.x >= min.x){
-        intersected = true;
-    }
-    
+	float t_maxz = (max.z-n.origin.z)/(glm::normalize(n.direction)).z;
+	glm::vec3 p_z2 = n.origin + t_maxz*(glm::normalize(n.direction)); 
+	
+	if(p_z2.y <= max.y && p_z2.y >= min.y
+	&& p_z2.x <= max.x && p_z2.x >= min.x){
+		intersected = true;
+	hit.normal = glm::vec3{0.0, 0.0, -1.0};
+	}
+	
 
-    if (intersected == true){
-       hit.intersected= true;
-       hit.direction = n.direction;
-       hit.distance = t;
-       hit.name = name_;
-       hit.intersection_point = p_x;
-    }
+	if (intersected == true){
+		hit.intersected = true;
+		hit.direction = glm::normalize(n.direction);
+		hit.distance = t;
+		hit.name = name_;
+		hit.intersection_point = p_x;
+		hit.material = material;
+	}
+	hit.material = material;
 return hit;
 }
 

@@ -81,7 +81,6 @@ Scene sdfloader(std::string const& filename)
 					std::shared_ptr<Shape> sphere(new Sphere(pos, rad, name, scene.find_material(mat)));
 					scene.shape_map[name] = sphere;
 					std::cout<<"Loaded sphere: "<<name<<".\n";
-
 				}
 
 				if(keyword == "box"){
@@ -104,7 +103,6 @@ Scene sdfloader(std::string const& filename)
 					std::shared_ptr<Shape> box(new Box(min, max, name, scene.find_material(mat)));
 					scene.shape_map[name] = box;
 					std::cout<<"Loaded box: "<<name<<".\n";
-
 				}
 
 				if(keyword == "light"){

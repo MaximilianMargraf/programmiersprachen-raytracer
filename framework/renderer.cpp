@@ -62,7 +62,9 @@ void Renderer::render()
 			shooty.direction = glm::vec3{(x-w)/width_, (y-h)/height_, -distance};
 			shooty.direction = glm::normalize(shooty.direction);
 
+			//std::cout<<"Start raytracer.\n";
 			p.color = raytrace(shooty);
+			//std::cout<<"Raytracing finished\n";
 			write(p);
 		}
 	}
@@ -74,7 +76,7 @@ Color Renderer::raytrace(Ray const& ray) const{
 	std::vector<HitPoint> hits;
 	Color px(0.0, 0.0, 0.0);
 	HitPoint hp, closest;
-	closest.distance = 9999.0;
+	closest.distance = 99999.0;
 
 	for(auto it = scene.shape_map.begin(); it != scene.shape_map.end(); it++){
 		hp = it->second->intersect(ray);
@@ -100,15 +102,26 @@ Color Renderer::raytrace(Ray const& ray) const{
 
 	hits.clear();
 	// now closest is the hitpoint with the smallest distance to camera, we use it for color calculation
-	px = shade(closest);
-	return px;
+	if(closest.distance < 99999.0){
+		//std::cout<<"Start shading.\n";
+		px = shade(closest);
+		return px;
+	}
+	else{
+		px = scene.ambient;
+		return px;
+	}
+	//std::cout<<"Finished shading.\n";
+	
 }
 
 Color Renderer::shade(HitPoint const& hit) const{
+	//std::cout<<"Ǵet material information of HitPoint.\n";
 	Color ka = hit.material->ka;
 	Color kd = hit.material->ks;
 	Color ks = hit.material->kd;
 
+	//std::cout<<"Declaring most of the important variables\n";
 	// Color of ambient light is simply multiplied with the c. of the material
 	Color ltotal = scene.ambient * ka;
 
@@ -118,23 +131,26 @@ Color Renderer::shade(HitPoint const& hit) const{
 	HitPoint hp;
 	float light_norm_angle;
 	float norm_cam_angle;
-	glm::vec3 direction_inverted = -hit.direction;
 	std::vector<Light> lights_reached;
 	std::vector<float> light_norm_angle_vec;
 	std::vector<float> norm_cam_angle_vec;
 
-	// for every light in the scene 
+	glm::vec3 direction_inverted = -hit.direction;
+
+	// for every light in the scene
+	//std::cout<<"Iterating over lights.\n";
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
 		// vector to the light
 		glm::vec3 lightvec = it->second.position - hit.intersection_point;
-
 		// ray from the intersection point to the light source to check shadows
 		Ray lightray;
 		// move the hitpoint slightly from the actual object for better calculations
+		//std::cout<<"Calculate light vector.\n";
 		lightray.origin = hit.intersection_point + hit.normal * bias;
 		lightray.direction = glm::normalize(lightvec);
 
 		// iterate over all shapes to see if there is a shape between intersection and light
+		//std::cout<<"Iterate over shapes.\n";
 		for(auto jt = scene.shape_map.begin(); jt != scene.shape_map.end(); jt++){
 			hp = jt->second->intersect(lightray);
 
@@ -152,6 +168,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 	}
 
 	// onto specular light, formula from the scripts for multiple light sources
+	//std::cout<<"Calculate final color.\n";
 	Color ss{0.0,0.0,0.0};
 	for(int i = 0; i < lights_reached.size(); i++){
 		ss += lights_reached[i].color * lights_reached[i].brightness *
