@@ -137,12 +137,27 @@ Scene sdfloader(std::string const& filename)
 
 				if(keyword == "camera"){
 					std::string name;
-					float fov_x;
+					float fov_x, x, y, z;
 
 					ss>>name;
 					ss>>fov_x;
 
-					std::shared_ptr<Camera> camera(new Camera(name, fov_x));
+					ss>>x;
+					ss>>y;
+					ss>>z;
+					glm::vec3 position = glm::vec3{x, y, z}; 
+
+					ss>>x;
+					ss>>y;
+					ss>>z;
+					glm::vec3 direction = glm::vec3{x, y, z};
+
+					ss>>x;
+					ss>>y;
+					ss>>z;
+					glm::vec3 up = glm::vec3{x, y, z};
+
+					std::shared_ptr<Camera> camera(new Camera(name, fov_x, position, direction, up));
 					scene.camera_map[name] = camera;
 					std::cout<<"Loaded camera: "<<name<<".\n";
 				}

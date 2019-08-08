@@ -8,6 +8,7 @@
 struct Camera {
 
 	Camera(std::string, float);
+	Camera(std::string, float, glm::vec3, glm::vec3, glm::vec3);
 
 	std::ostream& print(std::ostream& os) const;
 

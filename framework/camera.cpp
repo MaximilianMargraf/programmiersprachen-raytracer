@@ -1,8 +1,16 @@
 #include "camera.hpp"
 
-Camera::Camera(std::string name_, float fov):
+Camera::Camera(std::string name_, float fov_):
 	name{name_},
-	fov_x{fov}
+	fov_x{fov_}
+	{}
+
+Camera::Camera(std::string name_, float fov_, glm::vec3 pos_, glm::vec3 direction_, glm::vec3 up_):
+	name{name_},
+	fov_x{fov_},
+	position{pos_},
+	direction{direction_},
+	up{up_}
 	{}
 
 std::ostream& Camera::print(std::ostream& os) const{
