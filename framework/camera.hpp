@@ -2,6 +2,7 @@
 #define CAMERA_HPP
 
 #include <iostream>
+#include <glm/glm.hpp>
 #include <glm/vec3.hpp>
 #include <string>
 
@@ -11,6 +12,7 @@ struct Camera {
 	Camera(std::string, float, glm::vec3, glm::vec3, glm::vec3);
 
 	std::ostream& print(std::ostream& os) const;
+	glm::mat4 camTrans() const;
 
 	glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
 	glm::vec3 direction = glm::vec3(0.0, 0.0, -1.0);
