@@ -39,7 +39,7 @@ Scene sdfloader(std::string const& filename)
 				if(keyword == "material"){
 					float r, g, b;
 					std::string name;
-					float specular;
+					float specular, reflection;
 					ss>>name;
 
 					ss>>r;
@@ -58,8 +58,9 @@ Scene sdfloader(std::string const& filename)
 					Color ks(r, g, b);
 
 					ss>>specular;
+					ss>>reflection;
 
-					std::shared_ptr<Material> mat(new Material(name, ka, kd, ks, specular));
+					std::shared_ptr<Material> mat(new Material(name, ka, kd, ks, specular, reflection));
 					scene.material_map[name] = mat;
 					std::cout<<"Loaded material: "<<name<<".\n";
 				}

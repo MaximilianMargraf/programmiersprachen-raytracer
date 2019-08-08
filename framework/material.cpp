@@ -17,12 +17,13 @@ Material::Material(std::string name_):
 	{}
 
 Material::Material(std::string const& name_, Color const& ka_,
-	Color const& kd_, Color const& ks_, float m_):
+	Color const& kd_, Color const& ks_, float m_, float r_):
 	name{name_},
 	ka{ka_},
 	kd{kd_},
 	ks{ks_},
-	m{m_}
+	m{m_},
+	r{r_}
 	{}
 
 Material::~Material(){}
@@ -32,7 +33,8 @@ std::ostream& Material::print(std::ostream& os) const{
 	<<"ka: "<< ka << "\n"
 	<<"kd: "<< kd << "\n"
 	<<"ks: "<< ks << "\n"
-	<<"Specular Exponent: "<< m  << "\n";
+	<<"Specular Exponent: "<< m  << "\n"
+	<<"Reflection factor: "<< r <<"\n";
 	return os;
 }
 

@@ -8,7 +8,9 @@
 // -----------------------------------------------------------------------------
 
 #include "renderer.hpp"
+int depth = 3;
 
+// How often we want to reflect from 
 Renderer::Renderer(unsigned w, unsigned h, std::string const& file):
 	width_(w),
 	height_(h),
@@ -25,19 +27,16 @@ Renderer::Renderer(Scene const& scene_):
 	cam(scene_.cam_name),
 	ppm_(scene_.xres, scene_.yres),
 	scene(scene_)
-	{
-		std::cout<<"Scene camera name: "<<scene_.cam_name<<"\n";
-		std::cout<<"Camera name: "<<cam<<"\n";
-	}
+	{}
 
 void Renderer::render()
 {
-	std::cout<<"Starting rendering process\n";
+	//std::cout<<"Starting rendering process\n";
 	// width of the image plan for calculation = 1
 	// horizontal image angle is the fovx of the camera
-	std::cout<<"Camera name: "<<cam<<"\n";
+	//std::cout<<"Camera name: "<<cam<<"\n";
 	float a = scene.find_camera(cam)->fov_x;
-	std::cout<<"Fov_x: "<<a<<"\n";
+	//std::cout<<"Fov_x: "<<a<<"\n";
 
 	// smallest distance from camera angle to image plane
 	float distance = (width_/2)/tan((a/2)*M_PI / 180);
@@ -174,6 +173,26 @@ Color Renderer::shade(HitPoint const& hit) const{
 		ss += lights_reached[i].color * lights_reached[i].brightness *
 						(kd * light_norm_angle_vec[i] + ks * norm_cam_angle_vec[i]);
 	}
+
+	// Reflection of light from other object, this will be executed up to 3 times
+	if(depth > 0){
+		depth--;
+		float camera_normal = glm::dot(hit.normal, direction_inverted);
+
+		// reflected ray from object into scene
+		glm::vec3 reflection = 2.0f * camera_normal * hit.normal - direction_inverted;
+		Ray reflec{hit.intersection_point + hit.normal * bias, reflection};
+
+		Color reflection_c{0.0, 0.0, 0.0};
+		reflection_c = raytrace(reflec);
+		reflection_c = reflection_c * hit.material->r;
+
+		// add color of reflection to the color of the object
+		ss = ss*(1-hit.material->r)+reflection_c;
+		ltotal = ss + scene.ambient;
+		return ltotal;
+	}
+
 	ltotal += ss;
 	return ltotal;
 }

@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	Scene scene = sdfloader(filepath);
 
 	Renderer renderer{scene};
-	std::cout<<"Init Renderer worked\n";
+	//std::cout<<"Init Renderer worked\n";
 
 	//create separate thread to see updates of pixels while rendering
 	std::thread render_thread([&renderer]() {renderer.render();});

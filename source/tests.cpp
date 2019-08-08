@@ -45,7 +45,7 @@ TEST_CASE ("Test sphere class", "[Sphere]"){
 	std::shared_ptr<Material> red(
 			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
 				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
-				4.0f));
+				4.0f, 0.5f));
 	std::unique_ptr<Sphere> s4(new Sphere(vect, rad, "Sphere 4", red));
 	REQUIRE(s4->getRadius() == 0);
 	REQUIRE(s4->getCenter() == vect);
@@ -87,7 +87,7 @@ TEST_CASE ("Test box class", "[box]"){
 	std::shared_ptr<Material> red(
 			new Material("Red", Color(1.0, 160.0/250.0, 122.0/255.0),
 				Color(1.0, 160.0/250.0, 122.0/255.0), Color(1.0, 160.0/250.0, 122.0/255.0),
-				4.0f));
+				4.0f, 0.5f));
 	std::unique_ptr<Box> b4(new Box(min, max, "Box 4", red));
 	REQUIRE(b4->getMin() == max);
 	REQUIRE(b4->getMax() == min);
@@ -157,7 +157,7 @@ TEST_CASE("intersect_ray_sphere", "[intersect]"){
 	std::shared_ptr<Material> red(
 			new Material("Red", Color(1.0, 160.0/255.0, 122.0/255.0),
 				Color(1.0, 160.0/255.0, 122.0/255.0), Color(1.0, 160.0/255.0, 122.0/255.0),
-				4.0f));
+				4.0f, 0.5f));
 	std::unique_ptr<Sphere> s1(new Sphere(sphere_center, sphere_radius, "Sphere 1", red));
 	std::unique_ptr<Ray> r1(new Ray());
 	r1->origin = ray_origin;
