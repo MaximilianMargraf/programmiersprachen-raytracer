@@ -116,36 +116,35 @@ Color Renderer::shade(HitPoint const& hit) const{
 	HitPoint hp;
 	float light_norm_angle;
 	float norm_cam_angle;
+
 	std::vector<Light> lights_reached;
 	std::vector<float> light_norm_angle_vec;
 	std::vector<float> norm_cam_angle_vec;
 
-	glm::vec3 direction_inverted = -hit.direction;
+	glm::vec3 direction_inverted = glm::normalize(-hit.direction);
+	glm::vec3 norm = glm::normalize(hit.normal);
 
 	// for every light in the scene
-	//std::cout<<"Iterating over lights.\n";
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
-		// vector to the light
-		glm::vec3 lightvec = it->second.position - hit.intersection_point;
 		// ray from the intersection point to the light source to check shadows
 		Ray lightray;
+		// vector to the light from intersection point
+		glm::vec3 lightvec = it->second.position - hit.intersection_point;
 		// move the hitpoint slightly from the actual object for better calculations
-		//std::cout<<"Calculate light vector.\n";
-		lightray.origin = hit.intersection_point + hit.normal * bias;
+		lightray.origin = hit.intersection_point + norm * bias;
 		lightray.direction = glm::normalize(lightvec);
 
 		// iterate over all shapes to see if there is a shape between intersection and light
-		//std::cout<<"Iterate over shapes.\n";
 		for(auto jt = scene.shape_map.begin(); jt != scene.shape_map.end(); jt++){
 			hp = jt->second->intersect(lightray);
 
 			// if there was no intersection
 			if(hp.intersected == false){
 				lights_reached.push_back(it->second);
-				light_norm_angle = std::max(0.0f, glm::dot(hit.normal, lightvec));
+				light_norm_angle = std::max(0.0f, glm::dot(norm, lightvec));
 				light_norm_angle_vec.push_back(light_norm_angle);
 
-				glm::vec3 reflection = 2.0f * light_norm_angle * hit.normal - lightvec;
+				glm::vec3 reflection = 2.0f * light_norm_angle * norm - lightvec;
 				norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
 				norm_cam_angle_vec.push_back(pow((norm_cam_angle), hit.material->m));
 			}
@@ -162,13 +161,13 @@ Color Renderer::shade(HitPoint const& hit) const{
 
 	// Reflection of light from other object, this will be executed up to 3 times
 	if(depth > 0){
-		depth--;
+		--depth;
 		// angle between camera ray and normal of intersection point
-		float camera_normal = glm::dot(hit.normal, direction_inverted);
+		float camera_normal = glm::dot(norm, direction_inverted);
 
 		// reflected ray from object into scene
-		glm::vec3 reflection = 2.0f * camera_normal * hit.normal - direction_inverted;
-		Ray reflec{hit.intersection_point + hit.normal * bias, reflection};
+		glm::vec3 reflection = 2.0f * camera_normal * norm - direction_inverted;
+		Ray reflec{hit.intersection_point + norm * bias, reflection};
 
 		// raytrace the reflected ray to determine color
 		Color reflection_c{0.0, 0.0, 0.0};
