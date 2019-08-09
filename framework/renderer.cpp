@@ -56,10 +56,16 @@ void Renderer::render()
 			//std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
 			Pixel p(x,y);
 
+			// Antialiasing !!!!! from coordinate go 0.5 in each direction (4 values)
+
 			// determine direction of ray
 			// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
 			shooty.direction = glm::vec3{(x-w)/width_, (y-h)/height_, -distance};
 			shooty.direction = glm::normalize(shooty.direction);
+
+			// include the camera transformation
+			// this just changes the ray according to the camera transformation
+			shooty.transformRay(scene.find_camera(scene.cam_name)->camTrans());
 
 			//std::cout<<"Start raytracer.\n";
 			p.color = raytrace(shooty);
@@ -71,47 +77,27 @@ void Renderer::render()
 }
 
 Color Renderer::raytrace(Ray const& ray) const{
-	// List of Hitpoints, we need the one with the smallest distance
-	std::vector<HitPoint> hits;
 	Color px(0.0, 0.0, 0.0);
 	HitPoint hp, closest;
 	closest.distance = 99999.0;
 
 	for(auto it = scene.shape_map.begin(); it != scene.shape_map.end(); it++){
 		hp = it->second->intersect(ray);
-		// if there was an actual intersection add the HitPoint to the vector
-		if(hp.intersected == true){
-			hits.push_back(hp);
+		// if there was an actual intersection and distance is smaller than before
+		if(hp.intersected == true && hp.distance < closest.distance){
+			closest = hp;
 		}
 	}
 
-	// only HitPoint with closest distance needed
-	if(hits.size()>0){
-		for(auto h : hits){
-			if(h.distance <= closest.distance){
-				closest = h;
-			}
-		}
+	// no intersection, return scene ambient color
+	if(closest.distance == 99999.0){
+		return scene.ambient;
 	}
-	// if there are no hitpoints in the list give ambient color
+	// intersection ahead, do this with the closest hitpoint
 	else{
-		px = scene.ambient;
-		return px;
-	}
-
-	hits.clear();
-	// now closest is the hitpoint with the smallest distance to camera, we use it for color calculation
-	if(closest.distance < 99999.0){
-		//std::cout<<"Start shading.\n";
 		px = shade(closest);
 		return px;
 	}
-	else{
-		px = scene.ambient;
-		return px;
-	}
-	//std::cout<<"Finished shading.\n";
-	
 }
 
 Color Renderer::shade(HitPoint const& hit) const{
@@ -177,12 +163,14 @@ Color Renderer::shade(HitPoint const& hit) const{
 	// Reflection of light from other object, this will be executed up to 3 times
 	if(depth > 0){
 		depth--;
+		// angle between camera ray and normal of intersection point
 		float camera_normal = glm::dot(hit.normal, direction_inverted);
 
 		// reflected ray from object into scene
 		glm::vec3 reflection = 2.0f * camera_normal * hit.normal - direction_inverted;
 		Ray reflec{hit.intersection_point + hit.normal * bias, reflection};
 
+		// raytrace the reflected ray to determine color
 		Color reflection_c{0.0, 0.0, 0.0};
 		reflection_c = raytrace(reflec);
 		reflection_c = reflection_c * hit.material->r;
@@ -193,6 +181,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 		return ltotal;
 	}
 
+	// if all reflections are handled we can return the normal color
 	ltotal += ss;
 	return ltotal;
 }

@@ -141,7 +141,6 @@ HitPoint Box::intersect(Ray const& r){
 		intersected = true;
 	hit.normal = glm::vec3{0.0, 0.0, -1.0};
 	}
-	
 
 	if (intersected == true){
 		hit.intersected = true;
