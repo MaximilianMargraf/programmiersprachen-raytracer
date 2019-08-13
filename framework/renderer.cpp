@@ -144,7 +144,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 				light_norm_angle = std::max(0.0f, glm::dot(norm, lightvec));
 				light_norm_angle_vec.push_back(light_norm_angle);
 
-				glm::vec3 reflection = 2.0f * light_norm_angle * norm - lightvec;
+				glm::vec3 reflection = glm::normalize(2.0f * light_norm_angle * norm - lightvec);
 				norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
 				norm_cam_angle_vec.push_back(pow((norm_cam_angle), hit.material->m));
 			}
@@ -165,8 +165,8 @@ Color Renderer::shade(HitPoint const& hit) const{
 		// angle between camera ray and normal of intersection point
 		float camera_normal = glm::dot(norm, direction_inverted);
 
-		// reflected ray from object into scene
-		glm::vec3 reflection = 2.0f * camera_normal * norm - direction_inverted;
+		// reflected ray from camera to object into scene
+		glm::vec3 reflection = glm::normalize(2.0f * camera_normal * norm - direction_inverted);
 		Ray reflec{hit.intersection_point + norm * bias, reflection};
 
 		// raytrace the reflected ray to determine color
