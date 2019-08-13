@@ -163,11 +163,12 @@ Color Renderer::shade(HitPoint const& hit) const{
 	//std::cout<<ltotal<<"\n";
 
 	// Reflection of light from other object, this will be executed up to 3 times
-	
-	/*if(depth > 0){
+	if(depth > 0){
+		//std::cout<<"Depth: "<<depth<<"\n";
 		--depth;
+		Color rs{0.0, 0.0, 0.0};
 		// angle between camera ray and normal of intersection point
-		float camera_normal = glm::dot(norm, direction_inverted);
+		float camera_normal = std::max(0.0f, glm::dot(norm, direction_inverted));
 
 		// reflected ray from camera to object into scene
 		glm::vec3 reflection = glm::normalize(2.0f * camera_normal * norm - direction_inverted);
@@ -178,12 +179,11 @@ Color Renderer::shade(HitPoint const& hit) const{
 		reflection_c = raytrace(reflec);
 		reflection_c = reflection_c * hit.material->r;
 
-		// add color of reflection to the color of the object
-		ss = ss*(1-hit.material->r)+reflection_c;
-		ltotal = ss + scene.ambient;
+		ltotal += reflection_c;
 		return ltotal;
-	}*/
+	}
 
+	depth = 3;
 	// if all reflections are handled we can return the normal color
 	return ltotal;
 }
