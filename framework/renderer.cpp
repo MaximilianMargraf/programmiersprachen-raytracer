@@ -58,18 +58,25 @@ void Renderer::render()
 			Pixel p(x,y);
 
 			// Antialiasing !!!!! from coordinate go 0.5 in each direction (4 values)
+			for(float i = 0.0f; i<1.0f; i += 0.5f){
+				for(float j = 0.0f; j<1.0f; j += 0.5f){
+					float xa = (float)x + i;
+					float ya = (float)y + j;
 
-			// determine direction of ray
-			// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
-			shooty.direction = glm::vec3{(x-w), (y-h), -distance};
-			shooty.direction = glm::normalize(shooty.direction);
+					// determine direction of ray
+					// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
+					shooty.direction = glm::vec3{(xa-w), (ya-h), -distance};
+					shooty.direction = glm::normalize(shooty.direction);
 
-			// include the camera transformation
-			// this just changes the ray according to the camera transformation
-			shooty.transformRay(scene.find_camera(scene.cam_name)->camTrans());
+					// include the camera transformation
+					// this just changes the ray according to the camera transformation
+					shooty.transformRay(scene.find_camera(scene.cam_name)->camTrans());
 
-			//std::cout<<"Start raytracer.\n";
-			p.color = raytrace(shooty);
+					//std::cout<<"Start raytracer.\n";
+					p.color = raytrace(shooty);
+				}
+			}
+
 			//std::cout<<"Raytracing finished\n";
 			write(p);
 		}
