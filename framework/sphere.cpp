@@ -59,7 +59,8 @@ HitPoint Sphere::intersect(Ray const& ray){
     hitpoint.name = name_;
     hitpoint.material = material;
     hitpoint.distance = distance;
-    hitpoint.intersection_point = distance * glm::normalize(ray.direction);
+    //std::cout<<center.x<<", "<<center.y<<", "<<center.z<<"\n";
+    hitpoint.intersection_point = ray.origin + distance * glm::normalize(ray.direction);
     hitpoint.normal =  hitpoint.intersection_point - center;
     hitpoint.direction = glm::normalize(ray.direction);
 

@@ -17,7 +17,7 @@ struct Ray
 
 		origin = glm::vec3{mat * a};
 		direction = glm::normalize(glm::vec3{mat * b});
-		return  *this;
+		return *this;
 	}
 };
 

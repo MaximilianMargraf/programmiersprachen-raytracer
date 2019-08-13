@@ -48,6 +48,7 @@ void Renderer::render()
 	// create ray through image plane
 	Ray shooty;
 	shooty.origin = scene.find_camera(scene.cam_name)->position;
+	//std::cout<<shooty.origin.x<<", "<<shooty.origin.y<<", "<<shooty.origin.z<<"\n";
 
 	// from bottom left to top right
 	// botom left is -(width/2)/width
@@ -60,7 +61,7 @@ void Renderer::render()
 
 			// determine direction of ray
 			// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
-			shooty.direction = glm::vec3{(x-w)/width_, (y-h)/height_, -distance};
+			shooty.direction = glm::vec3{(x-w), (y-h), -distance};
 			shooty.direction = glm::normalize(shooty.direction);
 
 			// include the camera transformation
@@ -103,8 +104,9 @@ Color Renderer::raytrace(Ray const& ray) const{
 Color Renderer::shade(HitPoint const& hit) const{
 	//std::cout<<"Ǵet material information of HitPoint.\n";
 	Color ka = hit.material->ka;
-	Color kd = hit.material->ks;
-	Color ks = hit.material->kd;
+	Color kd = hit.material->kd;
+	Color ks = hit.material->ks;
+
 
 	//std::cout<<"Declaring most of the important variables\n";
 	// Color of ambient light is simply multiplied with the c. of the material
@@ -117,12 +119,10 @@ Color Renderer::shade(HitPoint const& hit) const{
 	float light_norm_angle;
 	float norm_cam_angle;
 
-	std::vector<Light> lights_reached;
-	std::vector<float> light_norm_angle_vec;
-	std::vector<float> norm_cam_angle_vec;
-
 	glm::vec3 direction_inverted = glm::normalize(-hit.direction);
 	glm::vec3 norm = glm::normalize(hit.normal);
+
+	//return Color{(norm.x+1)/2,(norm.y+1)/2,0};
 
 	// for every light in the scene
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
@@ -133,34 +133,38 @@ Color Renderer::shade(HitPoint const& hit) const{
 		// move the hitpoint slightly from the actual object for better calculations
 		lightray.origin = hit.intersection_point + norm * bias;
 		lightray.direction = glm::normalize(lightvec);
+		//return Color{(lightray.direction.x+1)/2,(lightray.direction.y+1)/2,(lightray.direction.z+1)/2};
 
 		// iterate over all shapes to see if there is a shape between intersection and light
 		for(auto jt = scene.shape_map.begin(); jt != scene.shape_map.end(); jt++){
 			hp = jt->second->intersect(lightray);
-
-			// if there was no intersection
-			if(hp.intersected == false){
-				lights_reached.push_back(it->second);
-				light_norm_angle = std::max(0.0f, glm::dot(norm, lightvec));
-				light_norm_angle_vec.push_back(light_norm_angle);
-
-				glm::vec3 reflection = glm::normalize(2.0f * light_norm_angle * norm - lightvec);
-				norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
-				norm_cam_angle_vec.push_back(pow((norm_cam_angle), hit.material->m));
+			if(hp.intersected) {
+				break;
 			}
 		}
-	}
 
-	// onto specular light, formula from the scripts for multiple light sources
-	//std::cout<<"Calculate final color.\n";
-	Color ss{0.0,0.0,0.0};
-	for(int i = 0; i < lights_reached.size(); i++){
-		ss += lights_reached[i].color * lights_reached[i].brightness *
-						(kd * light_norm_angle_vec[i] + ks * norm_cam_angle_vec[i]);
+		// if there was no intersection
+		if(hp.intersected == false){
+			light_norm_angle = std::max(0.0f, glm::dot(norm, lightray.direction));
+			//return Color{light_norm_angle, light_norm_angle , light_norm_angle};
+
+			//glm::vec3 reflection = glm::normalize(2.0f * light_norm_angle * norm - lightray.direction);
+			glm::vec3 reflection = glm::reflect(-lightray.direction, norm);
+			norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
+			norm_cam_angle = pow(norm_cam_angle, hit.material->m);
+			//return Color{norm_cam_angle, norm_cam_angle , norm_cam_angle};
+			
+			ltotal += it->second.color * it->second.brightness *
+					(kd * light_norm_angle + ks * norm_cam_angle);
+			//std::cout<<kd.r<<"\n";
+		}
+		
 	}
+	//std::cout<<ltotal<<"\n";
 
 	// Reflection of light from other object, this will be executed up to 3 times
-	if(depth > 0){
+	
+	/*if(depth > 0){
 		--depth;
 		// angle between camera ray and normal of intersection point
 		float camera_normal = glm::dot(norm, direction_inverted);
@@ -178,10 +182,9 @@ Color Renderer::shade(HitPoint const& hit) const{
 		ss = ss*(1-hit.material->r)+reflection_c;
 		ltotal = ss + scene.ambient;
 		return ltotal;
-	}
+	}*/
 
 	// if all reflections are handled we can return the normal color
-	ltotal += ss;
 	return ltotal;
 }
 
