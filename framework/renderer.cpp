@@ -31,12 +31,7 @@ Renderer::Renderer(Scene const& scene_):
 
 void Renderer::render()
 {
-	//std::cout<<"Starting rendering process\n";
-	// width of the image plan for calculation = 1
-	// horizontal image angle is the fovx of the camera
-	//std::cout<<"Camera name: "<<cam<<"\n";
 	float a = scene.find_camera(cam)->fov_x;
-	//std::cout<<"Fov_x: "<<a<<"\n";
 
 	// smallest distance from camera angle to image plane
 	float distance = (width_/2)/tan((a/2)*M_PI / 180);
@@ -48,36 +43,29 @@ void Renderer::render()
 	// create ray through image plane
 	Ray shooty;
 	shooty.origin = scene.find_camera(scene.cam_name)->position;
-	//std::cout<<shooty.origin.x<<", "<<shooty.origin.y<<", "<<shooty.origin.z<<"\n";
 
 	// from bottom left to top right
-	// botom left is -(width/2)/width
 	for (unsigned y = 0; y < height_; ++y) {
 		for (unsigned x = 0; x < width_; ++x) {
-			//std::cout<<"Y: "<<y<<", X: "<<x<<"\n";
 			Pixel p(x,y);
 
-			// Antialiasing !!!!! from coordinate go 0.5 in each direction (4 values)
+			// Antialiasing: from coordinate go 0.5 in each direction (4 values)
 			for(float i = 0.0f; i<1.0f; i += 0.5f){
 				for(float j = 0.0f; j<1.0f; j += 0.5f){
 					float xa = (float)x + i;
 					float ya = (float)y + j;
 
 					// determine direction of ray
-					// (x-w)/width ensure a value of -0.5 to 0.5 according to the lecture
 					shooty.direction = glm::vec3{(xa-w), (ya-h), -distance};
 					shooty.direction = glm::normalize(shooty.direction);
 
-					// include the camera transformation
 					// this just changes the ray according to the camera transformation
 					shooty.transformRay(scene.find_camera(scene.cam_name)->camTrans());
 
-					//std::cout<<"Start raytracer.\n";
-					p.color = raytrace(shooty);
+					// we interpolate with 4 color values
+					p.color += raytrace(shooty) * 0.25f;
 				}
 			}
-
-			//std::cout<<"Raytracing finished\n";
 			write(p);
 		}
 	}
@@ -114,8 +102,6 @@ Color Renderer::shade(HitPoint const& hit) const{
 	Color kd = hit.material->kd;
 	Color ks = hit.material->ks;
 
-
-	//std::cout<<"Declaring most of the important variables\n";
 	// Color of ambient light is simply multiplied with the c. of the material
 	Color ltotal = scene.ambient * ka;
 
@@ -129,7 +115,8 @@ Color Renderer::shade(HitPoint const& hit) const{
 	glm::vec3 direction_inverted = glm::normalize(-hit.direction);
 	glm::vec3 norm = glm::normalize(hit.normal);
 
-	//return Color{(norm.x+1)/2,(norm.y+1)/2,0};
+	// do this to check the normals of the shapes
+	return Color{(norm.x+1)/2,(norm.y+1)/2,(norm.z+1)/2};
 
 	// for every light in the scene
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){
@@ -155,7 +142,6 @@ Color Renderer::shade(HitPoint const& hit) const{
 			light_norm_angle = std::max(0.0f, glm::dot(norm, lightray.direction));
 			//return Color{light_norm_angle, light_norm_angle , light_norm_angle};
 
-			//glm::vec3 reflection = glm::normalize(2.0f * light_norm_angle * norm - lightray.direction);
 			glm::vec3 reflection = glm::reflect(-lightray.direction, norm);
 			norm_cam_angle = std::max(0.0f, glm::dot(reflection, direction_inverted));
 			norm_cam_angle = pow(norm_cam_angle, hit.material->m);
@@ -163,11 +149,9 @@ Color Renderer::shade(HitPoint const& hit) const{
 			
 			ltotal += it->second.color * it->second.brightness *
 					(kd * light_norm_angle + ks * norm_cam_angle);
-			//std::cout<<kd.r<<"\n";
 		}
 		
 	}
-	//std::cout<<ltotal<<"\n";
 
 	// Reflection of light from other object, this will be executed up to 3 times
 	if(depth > 0){
