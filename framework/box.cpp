@@ -94,6 +94,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_x.y <= max.y && p_x.y >= min.y
 	&& p_x.z <= max.z && p_x.z >= min.z){
 		intersected = true;
+		hit.intersection_point = p_x;
 	hit.normal = glm::vec3{1.0, 0.0, 0.0};
 	}
 
@@ -103,6 +104,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_x2.y <= max.y && p_x2.y >= min.y
 	&& p_x2.z <= max.z && p_x2.z >= min.z){
 		intersected = true;
+		hit.intersection_point = p_x2;
 	hit.normal = glm::vec3{-1.0, 0.0, 0.0};
 	}
 
@@ -112,6 +114,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_y.x <= max.x && p_y.x >= min.x
 	&& p_y.z <= max.z && p_y.z >= min.z){
 		intersected = true;
+		hit.intersection_point = p_y;
 	hit.normal = glm::vec3{0.0, 1.0, 0.0};
 	}
 
@@ -121,6 +124,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_y2.x <= max.x && p_y2.x >= min.x
 	&& p_y2.z <= max.z && p_y2.z >= min.z){
 		intersected = true;
+		hit.intersection_point = p_y2;
 	hit.normal = glm::vec3{0.0, -1.0, 0.0};
 	}
 	
@@ -130,6 +134,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_z.y <= max.y && p_z.y >= min.y
 	&& p_z.x <= max.x && p_z.x >= min.x){
 		intersected = true;
+		hit.intersection_point = p_z;
 	hit.normal = glm::vec3{0.0, 0.0, 1.0};
 	}
 
@@ -139,6 +144,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_z2.y <= max.y && p_z2.y >= min.y
 	&& p_z2.x <= max.x && p_z2.x >= min.x){
 		intersected = true;
+		hit.intersection_point = p_z2;
 	hit.normal = glm::vec3{0.0, 0.0, -1.0};
 	}
 
@@ -147,7 +153,6 @@ HitPoint Box::intersect(Ray const& r){
 		hit.direction = glm::normalize(n.direction);
 		hit.distance = t;
 		hit.name = name_;
-		hit.intersection_point = p_x;
 		hit.material = material;
 	}
 	hit.material = material;
