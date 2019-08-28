@@ -83,11 +83,14 @@ std::ostream& Box::print(std::ostream& os) const{
 	return os;
 }
 
-
+/*
 HitPoint Box::intersect(Ray const& r){
 	Ray n{r};
 	HitPoint hit;
 	bool intersected = false;
+
+	// Vector for saving the two t
+	std::vector<float> intersection_param;
 
 	float t = (min.x-n.origin.x)/(glm::normalize(n.direction)).x;
 	glm::vec3 p_x = n.origin + t*(glm::normalize(n.direction)); 
@@ -95,8 +98,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_x.y <= max.y && p_x.y >= min.y
 	&& p_x.z <= max.z && p_x.z >= min.z){
 		intersected = true;
-		hit.intersection_point = p_x;
-		hit.distance = t;
+		intersection_param.push_back(t);
 	hit.normal = glm::vec3{1.0, 0.0, 0.0};
 	}
 
@@ -106,8 +108,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_x2.y <= max.y && p_x2.y >= min.y
 	&& p_x2.z <= max.z && p_x2.z >= min.z){
 		intersected = true;
-		hit.intersection_point = p_x2;
-		hit.distance = t_maxx;
+		intersection_param.push_back(t_maxx);
 	hit.normal = glm::vec3{-1.0, 0.0, 0.0};
 	}
 
@@ -117,8 +118,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_y.x <= max.x && p_y.x >= min.x
 	&& p_y.z <= max.z && p_y.z >= min.z){
 		intersected = true;
-		hit.intersection_point = p_y;
-		hit.distance = t_miny;
+		intersection_param.push_back(t_miny);
 	hit.normal = glm::vec3{0.0, 1.0, 0.0};
 	}
 
@@ -128,8 +128,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_y2.x <= max.x && p_y2.x >= min.x
 	&& p_y2.z <= max.z && p_y2.z >= min.z){
 		intersected = true;
-		hit.intersection_point = p_y2;
-		hit.distance = t_maxy;
+		intersection_param.push_back(t_maxy);
 	hit.normal = glm::vec3{0.0, -1.0, 0.0};
 	}
 	
@@ -139,8 +138,7 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_z.y <= max.y && p_z.y >= min.y
 	&& p_z.x <= max.x && p_z.x >= min.x){
 		intersected = true;
-		hit.intersection_point = p_z;
-		hit.distance = t_minz;
+		intersection_param.push_back(t_minz);
 	hit.normal = glm::vec3{0.0, 0.0, 1.0};
 	}
 
@@ -150,18 +148,88 @@ HitPoint Box::intersect(Ray const& r){
 	if(p_z2.y <= max.y && p_z2.y >= min.y
 	&& p_z2.x <= max.x && p_z2.x >= min.x){
 		intersected = true;
-		hit.intersection_point = p_z2;
-		hit.distance = t_maxz;
+		intersection_param.push_back(t_maxz);
 	hit.normal = glm::vec3{0.0, 0.0, -1.0};
 	}
 
-	if (intersected == true){
-		hit.intersected = true;
-		hit.direction = glm::normalize(n.direction);
+	for(int i = 0; i < 2; i++){
+		std::cout << intersection_param[i] << "\n";
+	}
+	return hit;
+}
+*/
+
+HitPoint Box::intersect(Ray const& r){
+
+	HitPoint hit;
+	hit.intersected = true;
+
+	float tmin = (min.x - r.origin.x) / glm::normalize(r.direction).x;
+	float tmax = (max.x - r.origin.x) / glm::normalize(r.direction).x;
+	hit.normal = glm::vec3{1.0, 0.0, 0.0};
+
+	if(tmin > tmax){
+		float tempx = tmin;
+		tmin = tmax;
+		tmax = tempx;
+		//hit.normal = glm::vec3{1.0, 0.0, 0.0};
+	}
+	float tymin = (min.y - r.origin.y) / glm::normalize(r.direction).y;
+	float tymax = (max.y - r.origin.y) / glm::normalize(r.direction).y;
+
+	if(tymin > tymax){
+		float tempy = tymin;
+		tymin = tymax;
+		tymax = tempy;
+	}
+	if((tmin > tymax) or (tymin > tmax)){
+		hit.intersected = false;
+	}
+
+	if(tymin > tmin){
+		tmin = tymin;
+		hit.normal = glm::vec3{0.0, 1.0, 0.0};
+	}
+	if(tymax > tmax){
+		tmax = tymax;
+		//hit.normal = glm::vec3{0.0, -1.0, 0.0};
+	}
+
+	float tzmin = (min.z - r.origin.z) / glm::normalize(r.direction).z;
+	float tzmax = (max.z - r.origin.z) / glm::normalize(r.direction).z;
+
+	if(tzmin > tzmax){
+		float tempz = tzmin;
+		tzmin = tzmax;
+		tzmax = tempz;
+	}
+	if((tmin > tzmax) or (tzmin > tmax)){
+		hit.intersected = false;
+	}
+
+	if(tzmin > tmin){
+		tmin = tzmin;
+		hit.normal = glm::vec3{0.0, 0.0, 1.0};
+	}
+	if(tzmax > tmax){
+		tmax = tzmax;
+		//hit.normal = glm::vec3{0.0, 0.0, -1.0};
+	}
+
+	if(hit.intersected == true){
 		hit.name = name_;
 		hit.material = material;
+		hit.direction = glm::normalize(r.direction);
+		if(tmin < tmax){
+			hit.distance = tmin;
+			hit.intersection_point = r.origin + tmin * glm::normalize(r.direction);
+		}
+		if(tmin > tmax){
+			hit.distance = tmax;
+			hit.intersection_point = r.origin + tmax * glm::normalize(r.direction);
+		}
 	}
-return hit;
+	return hit;
 }
 
 
