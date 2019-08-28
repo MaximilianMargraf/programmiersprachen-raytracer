@@ -50,6 +50,7 @@ HitPoint Triangle::intersect(Ray const& ray){
 
     hitpoint.intersected = glm::intersectRayTriangle(ray.origin, norm.direction, p1_, p2_, p3_, dl);
     hitpoint.name = name_;
+    hitpoint.intersection_point = ray.origin + distance * ray.direction;
     //hitpoint.distance = distance;
 
     return hitpoint;
