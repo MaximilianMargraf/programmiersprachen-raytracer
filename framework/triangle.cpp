@@ -55,3 +55,10 @@ HitPoint Triangle::intersect(Ray const& ray){
 
     return hitpoint;
 }
+
+void Triangle::translate(glm::vec3 const& translation){
+}
+
+void Triangle::scale(float const& factor){
+    
+}

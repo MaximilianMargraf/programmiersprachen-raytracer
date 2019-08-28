@@ -40,3 +40,10 @@ std::ostream& Cone::print(std::ostream& os) const{
     << "Radius: " << radius_ << "\n";
 	return os;
 }
+
+void Cone::translate(glm::vec3 const& translation){
+}
+
+void Cone::scale(float const& factor){
+
+}

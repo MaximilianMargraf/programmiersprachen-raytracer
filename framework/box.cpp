@@ -232,6 +232,14 @@ HitPoint Box::intersect(Ray const& r){
 	return hit;
 }
 
+void Box::translate(glm::vec3 const& translation){
+	min += translation;
+	max += translation;
+}
+
+void Box::scale(float const& factor){
+	
+}
 
 std::ostream& operator<<(std::ostream& os, Box const& s){
 	s.print(os);

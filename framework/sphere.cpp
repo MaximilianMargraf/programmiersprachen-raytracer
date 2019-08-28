@@ -4,8 +4,12 @@ Sphere::Sphere():
 	Shape(),
 	center{glm::vec3(0.0, 0.0, 0.0)},
 	radius{1}
-	{}
-
+	{
+		world_transformation[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation[3] = glm::vec4{center, 1.0f};
+	}
 Sphere::Sphere(glm::vec3 v, float r):
 	Shape(),
 	center{v},
@@ -14,6 +18,11 @@ Sphere::Sphere(glm::vec3 v, float r):
 		if(r < 0){
 			radius = 0;
 		}
+
+		world_transformation[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation[3] = glm::vec4{center, 1.0f};
 	}
 
 Sphere::Sphere(glm::vec3 v, float r, std::string name, std::shared_ptr<Material> mat):
@@ -24,6 +33,11 @@ Sphere::Sphere(glm::vec3 v, float r, std::string name, std::shared_ptr<Material>
 		if(r < 0){
 			radius = 0;
 		}
+
+		world_transformation[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation[3] = glm::vec4{center, 1.0f};
 	}
 
 Sphere::~Sphere(){}
@@ -65,6 +79,17 @@ HitPoint Sphere::intersect(Ray const& ray){
     hitpoint.direction = glm::normalize(ray.direction);
 
     return hitpoint;
+}
+
+void Sphere::translate(glm::vec3 const& translation){
+	center += translation;
+	world_transformation[3] = glm::vec4{center, 1.0f};
+}
+
+// this function seems to not be called
+void Sphere::scale(float const& factor){
+	radius = radius * factor;
+	//std::cout<<radius;
 }
 
 std::ostream& operator<<(std::ostream& os, Sphere const& s){

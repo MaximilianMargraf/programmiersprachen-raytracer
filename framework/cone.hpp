@@ -22,6 +22,8 @@ class Cone : public Shape{
 
         std::ostream& print(std::ostream& os) const override;
         HitPoint intersect(Ray const&) override;
+        void translate(glm::vec3 const&) override;
+        void scale(float const&) override;
 
     private:
         glm::vec3 p1_;

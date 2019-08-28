@@ -92,6 +92,7 @@ Color Renderer::raytrace(Ray const& ray) const{
 	// intersection ahead, do this with the closest hitpoint
 	else{
 		px = shade(closest);
+		px = px/(px+1);
 		return px;
 	}
 }
@@ -116,7 +117,7 @@ Color Renderer::shade(HitPoint const& hit) const{
 	glm::vec3 norm = glm::normalize(hit.normal);
 
 	// do this to check the normals of the shapes
-	return Color{(norm.x+1)/2,(norm.y+1)/2,(norm.z+1)/2};
+	//return Color{(norm.x+1)/2,(norm.y+1)/2,(norm.z+1)/2};
 
 	// for every light in the scene
 	for(auto it = scene.light_map.begin(); it != scene.light_map.end(); it++){

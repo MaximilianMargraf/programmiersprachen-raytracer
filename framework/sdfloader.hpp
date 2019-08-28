@@ -25,7 +25,7 @@ Scene sdfloader(std::string const& filename)
 	myfile.open(filename);
 
 	if (myfile.is_open()){
-		std::cout<<"Opened file for reading\n";
+		//std::cout<<"Opened file for reading\n";
 		while (getline(myfile,line))
 		{
 			std::stringstream ss;
@@ -62,7 +62,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Material> mat(new Material(name, ka, kd, ks, specular, reflection));
 					scene.material_map[name] = mat;
-					std::cout<<"Loaded material: "<<name<<".\n";
+					//std::cout<<"Loaded material: "<<name<<".\n";
 				}
 
 				if(keyword == "sphere"){
@@ -81,7 +81,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Shape> sphere(new Sphere(pos, rad, name, scene.find_material(mat)));
 					scene.shape_map[name] = sphere;
-					std::cout<<"Loaded sphere: "<<name<<".\n";
+					//std::cout<<"Loaded sphere: "<<name<<".\n";
 				}
 
 				if(keyword == "box"){
@@ -103,7 +103,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Shape> box(new Box(min, max, name, scene.find_material(mat)));
 					scene.shape_map[name] = box;
-					std::cout<<"Loaded box: "<<name<<".\n";
+					//std::cout<<"Loaded box: "<<name<<".\n";
 				}
 
 				if(keyword == "light"){
@@ -129,10 +129,10 @@ Scene sdfloader(std::string const& filename)
 					light.position = pos;
 					light.color = color;
 					light.brightness = brightness;
-					std::cout<<"Light got its values.\n";
+					//std::cout<<"Light got its values.\n";
 
 					scene.light_map[name] = light;
-					std::cout<<"Loaded light: "<<name<<".\n";
+					//std::cout<<"Loaded light: "<<name<<".\n";
 				}
 
 				if(keyword == "camera"){
@@ -159,7 +159,7 @@ Scene sdfloader(std::string const& filename)
 
 					std::shared_ptr<Camera> camera(new Camera(name, fov_x, position, direction, up));
 					scene.camera_map[name] = camera;
-					std::cout<<"Loaded camera: "<<name<<".\n";
+					//std::cout<<"Loaded camera: "<<name<<".\n";
 				}
 			}// define keyword
 
@@ -168,7 +168,7 @@ Scene sdfloader(std::string const& filename)
 				ss>>scene.file_name;
 				ss>>scene.xres;
 				ss>>scene.yres;
-				std::cout<<"Loaded renderer.\n";
+				//std::cout<<"Loaded renderer.\n";
 			}
 
 			if(keyword == "ambient"){
@@ -178,7 +178,7 @@ Scene sdfloader(std::string const& filename)
 				ss>>z;
 				Color color(x, y, z);
 				scene.ambient = color;
-				std::cout<<"Loaded ambient light.\n";
+				//std::cout<<"Loaded ambient light.\n";
 			}
 		}
 		myfile.close();
