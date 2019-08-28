@@ -33,6 +33,14 @@ float Cylinder::volume() const{
     return 1.0;
 }
 
+void Cylinder::translate(glm::vec3 const& translation){
+
+}
+
+void Cylinder::scale(float const& factor){
+
+}
+
 std::ostream& Cylinder::print(std::ostream& os) const{
 	Shape::print(os);
 	os << "Punkt 1: " << p1_.x << ", " << p1_.y << ", " << p1_.z << "\n"

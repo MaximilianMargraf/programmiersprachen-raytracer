@@ -70,6 +70,24 @@ struct Color
     return tmp;
   }
 
+  friend Color operator+(Color const& a, int b)
+  {
+    Color tmp(0,0,0);
+    tmp.r = a.r+b;
+    tmp.g = a.g+b;
+    tmp.b = a.b+b;
+    return tmp;
+  }
+
+  friend Color operator/(Color const& a, Color b)
+  {
+    Color tmp(0,0,0);
+    tmp.r = a.r/b.r;
+    tmp.g = a.g/b.g;
+    tmp.b = a.b/b.b;
+    return tmp;
+  }
+
   friend bool operator==(Color const& a, Color const& b)
   {
     if(a.r == b.r && a.g == b.g && a.b == b.b){
