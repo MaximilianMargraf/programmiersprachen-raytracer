@@ -44,6 +44,6 @@ std::ostream& Cone::print(std::ostream& os) const{
 void Cone::translate(glm::vec3 const& translation){
 }
 
-void Cone::scale(float const& factor){
+void Cone::scale(glm::vec3 const& factor){
 
 }

@@ -17,7 +17,7 @@
 // executing the animation.cpp will take some sweet time depending on the rig
 int main(int argc, char* argv[])
 {
-	int seconds = 1;
+	int seconds = 2;
 	int frames = 24 * seconds;
 
 	std::string filepath = "../../files/animation.txt";
@@ -35,8 +35,9 @@ int main(int argc, char* argv[])
 		scene.find_shape("Sphere3")->translate(circle1);
 
 		// scale up sphere in background
-		float factor = 1 + (i / frames)*5;
-		std::cout<<"scale up sphere2 by "<<factor<<"\n";
+		float ff = 1 + (i / frames)*5;
+		glm::vec3 factor = glm::vec3{ff, ff, ff};
+		//std::cout<<"scale up sphere2 by "<<factor.x<<"\n";
 		scene.find_shape("Sphere2")->scale(factor);
 
 		// save the pic with a different filename each time

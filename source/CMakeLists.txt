@@ -14,7 +14,7 @@ add_executable(raytracer
   ../framework/shape.cpp
   ../framework/sphere.cpp
   ../framework/box.cpp
-  ../framework/ray.hpp
+  ../framework/ray.cpp
   ../framework/hitpoint.hpp
   ../framework
   raytracer.cpp)
@@ -36,7 +36,7 @@ add_executable(animation
   ../framework/shape.cpp
   ../framework/sphere.cpp
   ../framework/box.cpp
-  ../framework/ray.hpp
+  ../framework/ray.cpp
   ../framework/hitpoint.hpp
   ../framework
   animation.cpp)

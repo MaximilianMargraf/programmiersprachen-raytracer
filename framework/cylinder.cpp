@@ -37,7 +37,7 @@ void Cylinder::translate(glm::vec3 const& translation){
 
 }
 
-void Cylinder::scale(float const& factor){
+void Cylinder::scale(glm::vec3 const& factor){
 
 }
 

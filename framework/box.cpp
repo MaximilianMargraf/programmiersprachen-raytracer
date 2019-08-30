@@ -161,7 +161,7 @@ void Box::translate(glm::vec3 const& translation){
 	max += translation;
 }
 
-void Box::scale(float const& factor){
+void Box::scale(glm::vec3 const& factor){
 	
 }
 

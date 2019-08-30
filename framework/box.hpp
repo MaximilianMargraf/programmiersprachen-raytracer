@@ -23,7 +23,7 @@ public:
 	float volume() const override;
 	std::ostream& print(std::ostream& os) const override;
 	void translate(glm::vec3 const&) override;
-	void scale(float const&) override;
+	void scale(glm::vec3 const&) override;
 
 	HitPoint intersect(Ray const&) override;
 
