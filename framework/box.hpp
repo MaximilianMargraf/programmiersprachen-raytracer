@@ -1,9 +1,11 @@
 #ifndef BOX_HPP
 #define BOX_HPP
 
+#include <catch.hpp>
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <math.h>
+#include <cmath>
 #include <vector>
 #include <algorithm>
 
@@ -18,6 +20,8 @@ public:
 
 	glm::vec3 getMin() const;
 	glm::vec3 getMax() const;
+	glm::vec3 calc_intersection_point(Ray const&, float);
+	glm::vec3 calc_n(HitPoint const&);
 
 	float area() const override;
 	float volume() const override;

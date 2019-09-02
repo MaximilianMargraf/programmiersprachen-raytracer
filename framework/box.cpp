@@ -4,7 +4,13 @@ Box::Box():
 	Shape(),
 	min{glm::vec3(0.0, 0.0, 0.0)},
 	max{glm::vec3(1.0, 1.0, 1.0)}
-	{}
+	{
+		world_transformation_[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
+	}
 
 Box::Box(glm::vec3 v, glm::vec3 w):
 	Shape(),
@@ -27,6 +33,11 @@ Box::Box(glm::vec3 v, glm::vec3 w):
 			max.z = min.z;
 			min.z = tmp;
 		}
+		world_transformation_[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
 	}
 
 Box::Box(glm::vec3 v, glm::vec3 w, std::string name, std::shared_ptr<Material> mat):
@@ -50,6 +61,11 @@ Box::Box(glm::vec3 v, glm::vec3 w, std::string name, std::shared_ptr<Material> m
 			max.z = min.z;
 			min.z = tmp;
 		}
+		world_transformation_[0] = glm::vec4{1.0f, 0.0f, 0.0f, 0.0f};
+		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
+		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
+		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
 	}
 
 Box::~Box(){}
@@ -86,73 +102,43 @@ std::ostream& Box::print(std::ostream& os) const{
 HitPoint Box::intersect(Ray const& r){
 
 	HitPoint hit;
-	hit.intersected = true;
+	Ray ray = transformRay(world_transformation_inv_, r);
 
-	float tmin = (min.x - r.origin.x) / glm::normalize(r.direction).x;
-	float tmax = (max.x - r.origin.x) / glm::normalize(r.direction).x;
-	hit.normal = glm::vec3{1.0, 0.0, 0.0};
+	float tmin = -INFINITY, tmax = INFINITY;
 
-	if(tmin > tmax){
-		float tempx = tmin;
-		tmin = tmax;
-		tmax = tempx;
-		//hit.normal = glm::vec3{1.0, 0.0, 0.0};
-	}
-	float tymin = (min.y - r.origin.y) / glm::normalize(r.direction).y;
-	float tymax = (max.y - r.origin.y) / glm::normalize(r.direction).y;
+	float t1 = (min.x - ray.origin.x)/ray.direction.x;
+	float t2 = (max.x - ray.origin.x)/ray.direction.x;
+	tmin = std::max(tmin,std::min(t1,t2));
+	tmax = std::min(tmax,std::max(t1,t2));
 
-	if(tymin > tymax){
-		float tempy = tymin;
-		tymin = tymax;
-		tymax = tempy;
-	}
-	if((tmin > tymax) or (tymin > tmax)){
-		hit.intersected = false;
-	}
+	t1 = (min.y - ray.origin.y)/ray.direction.y;
+	t2 = (max.y - ray.origin.y)/ray.direction.y;
+	tmin = std::max(tmin,std::min(t1,t2));
+	tmax = std::min(tmax,std::max(t1,t2));
 
-	if(tymin > tmin){
-		tmin = tymin;
-		hit.normal = glm::vec3{0.0, 1.0, 0.0};
-	}
-	if(tymax > tmax){
-		tmax = tymax;
-		//hit.normal = glm::vec3{0.0, -1.0, 0.0};
-	}
+	t1 = (min.z - ray.origin.z)/ray.direction.z;
+	t2 = (max.z - ray.origin.z)/ray.direction.z;
+	tmin = std::max(tmin,std::min(t1,t2));
+	tmax = std::min(tmax,std::max(t1,t2));
 
-	float tzmin = (min.z - r.origin.z) / glm::normalize(r.direction).z;
-	float tzmax = (max.z - r.origin.z) / glm::normalize(r.direction).z;
+	if (tmax > std::max(0.0F, tmin))
+	{
+		hit.distance = sqrt(tmin*tmin*(
+			ray.direction.x*ray.direction.x +
+			ray.direction.y*ray.direction.y +
+			ray.direction.z*ray.direction.z ));
 
-	if(tzmin > tzmax){
-		float tempz = tzmin;
-		tzmin = tzmax;
-		tzmax = tempz;
-	}
-	if((tmin > tzmax) or (tzmin > tmax)){
-		hit.intersected = false;
-	}
-
-	if(tzmin > tmin){
-		tmin = tzmin;
-		hit.normal = glm::vec3{0.0, 0.0, 1.0};
-	}
-	if(tzmax > tmax){
-		tmax = tzmax;
-		//hit.normal = glm::vec3{0.0, 0.0, -1.0};
-	}
-
-	if(hit.intersected == true){
-		hit.name = name_;
+		hit.intersection_point = this->calc_intersection_point(ray, hit.distance);
+		hit.intersected = true;
 		hit.material = material;
-		hit.direction = glm::normalize(r.direction);
-		if(tmin < tmax){
-			hit.distance = tmin;
-			hit.intersection_point = r.origin + tmin * glm::normalize(r.direction);
-		}
-		if(tmin > tmax){
-			hit.distance = tmax;
-			hit.intersection_point = r.origin + tmax * glm::normalize(r.direction);
-		}
+		hit.normal = this->calc_n(hit);
+		hit.name = name_;
+		hit.intersection_point = glm::vec3(world_transformation_*
+									glm::vec4(hit.intersection_point,1.0));
+		hit.normal = glm::normalize(glm::vec3(
+				glm::transpose(world_transformation_inv_)*glm::vec4(hit.normal, 0.0)));
 	}
+	//std::cout<<"return HitPoint\n";
 	return hit;
 }
 
@@ -168,4 +154,38 @@ void Box::scale(glm::vec3 const& factor){
 std::ostream& operator<<(std::ostream& os, Box const& s){
 	s.print(os);
 	return os;
+}
+
+glm::vec3 Box::calc_intersection_point(Ray const& ray, float distance){
+	glm::vec3 s_pt{ray.origin + ray.direction*distance};
+	return s_pt;
+}
+
+// get the correct normal depending on which size was hit
+glm::vec3 Box::calc_n(HitPoint const& hit){
+	auto surface_pt = hit.intersection_point; 
+	if(surface_pt.x == Approx(min.x))
+	{
+		return glm::vec3{-1.0,0.0,0.0};
+	}
+	if(surface_pt.y == Approx(min.y))
+	{
+		return glm::vec3{0.0,-1.0,0.0};
+	}
+	if(surface_pt.z == Approx(min.z))
+	{
+		return glm::vec3{0.0,0.0,-1.0};
+	}
+	if(surface_pt.x == Approx(max.x))
+	{
+		return glm::vec3{1.0,0.0,0.0};
+	}
+	if(surface_pt.y == Approx(max.y))
+	{
+		return glm::vec3{0.0,1.0,0.0};
+	}
+	if(surface_pt.z == Approx(max.z))
+	{
+		return glm::vec3{0.0,0.0,1.0};
+	}
 }

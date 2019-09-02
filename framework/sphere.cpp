@@ -9,6 +9,7 @@ Sphere::Sphere():
 		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
 		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
 		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
 	}
 Sphere::Sphere(glm::vec3 v, float r):
 	Shape(),
@@ -23,6 +24,7 @@ Sphere::Sphere(glm::vec3 v, float r):
 		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
 		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
 		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
 	}
 
 Sphere::Sphere(glm::vec3 v, float r, std::string name, std::shared_ptr<Material> mat):
@@ -38,6 +40,7 @@ Sphere::Sphere(glm::vec3 v, float r, std::string name, std::shared_ptr<Material>
 		world_transformation_[1] = glm::vec4{0.0f, 1.0f, 0.0f, 0.0f};
 		world_transformation_[2] = glm::vec4{0.0f, 0.0f, 1.0f, 0.0f};
 		world_transformation_[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
+		world_transformation_inv_ = glm::inverse(world_transformation_);
 	}
 
 Sphere::~Sphere(){}
