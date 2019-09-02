@@ -9,5 +9,5 @@ define box Box1 red -2.5 -2.5 -10 -1.5 -1.5 -9.5
 define light BlueLight 0 5 -5 0.1 0.5 0.5 0.9
 define light RedLight 0.0 0.0 0.0 0.8 0.5 0.5 0.9
 define camera eye 60.0 0.0 0.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
-ambient 0.0 0.0 0.0
+ambient 0.1 0.1 0.1
 render eye image.ppm 1000 600
