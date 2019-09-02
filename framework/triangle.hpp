@@ -25,6 +25,9 @@ class Triangle : public Shape{
         void translate(glm::vec3 const&) override;
         void scale(glm::vec3 const&) override;
 
+        glm::vec3 normal();
+        glm::vec3 intersection_point(Ray ray, float t);
+
     private:
         glm::vec3 p1_;
         glm::vec3 p2_;

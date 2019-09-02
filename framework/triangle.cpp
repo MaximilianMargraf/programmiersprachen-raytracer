@@ -42,18 +42,47 @@ std::ostream& Triangle::print(std::ostream& os) const{
 }
 
 HitPoint Triangle::intersect(Ray const& ray){
-    HitPoint hitpoint;
-    Ray norm;
-    norm.direction = glm::normalize(ray.direction);
-    float distance = 0.0f;
-    glm::vec3 dl;
+    HitPoint hit;
+    const float EPSILON = 0.0000001;
+    glm::vec3 edge1, edge2, h, s, q;
+    float a, f, u, v;
+    edge1 = p2_ - p1_;
+    edge2 = p3_ - p1_;
+    h = glm::cross(ray.direction, edge2);
+    a = glm::dot(edge1, h);
+    //ray is parallel to triangle:
+    if(a > -EPSILON && a < EPSILON) hit.intersected = false;
+    f = 1.0/a;
+    s = ray.origin - p1_;
+    u = f * glm::dot(s, h);
+    if(u < 0.0 || u > 1.0) hit.intersected = false;
+    q = glm::cross(s, edge1);
+    v = f * glm::dot(ray.direction, q);
+    if (v < 0.0 || u + v > 1.0) hit.intersected = false;
+    //find intersection point:
+    float t = f * glm::dot(edge2, q);
+    if(t > EPSILON){
+        hit.intersected = true;
+        hit.distance = t;
+        hit.intersection_point = this->intersection_point(ray, hit.distance);
+        hit.normal = this->normal();
+        hit.material = material;
+        hit.name = name_;
+    }
+    return hit;
+}
 
-    hitpoint.intersected = glm::intersectRayTriangle(ray.origin, norm.direction, p1_, p2_, p3_, dl);
-    hitpoint.name = name_;
-    hitpoint.intersection_point = ray.origin + distance * ray.direction;
-    //hitpoint.distance = distance;
+glm::vec3 Triangle::intersection_point(Ray ray, float t){
+    glm::vec3 intersection_point = ray.origin + t * ray.direction;
+    return intersection_point;
+}
 
-    return hitpoint;
+glm::vec3 Triangle::normal(){
+    glm::vec3 normal, edge1, edge2;
+    edge1 = p2_ - p1_;
+    edge2 = p3_ - p1_;
+    normal = glm::normalize(glm::cross(edge1, edge2));
+    return normal;
 }
 
 void Triangle::translate(glm::vec3 const& translation){

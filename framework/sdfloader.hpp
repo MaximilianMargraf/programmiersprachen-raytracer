@@ -16,6 +16,7 @@
 #include "scene.hpp"
 #include "shape.hpp"
 #include "sphere.hpp"
+#include "triangle.hpp"
 
 Scene sdfloader(std::string const& filename)
 {
@@ -104,6 +105,35 @@ Scene sdfloader(std::string const& filename)
 					std::shared_ptr<Shape> box(new Box(min, max, name, scene.find_material(mat)));
 					scene.shape_map[name] = box;
 					//std::cout<<"Loaded box: "<<name<<".\n";
+				}
+
+				if(keyword == "triangle"){
+					std::string name, mat;
+					float x, y, z;
+
+					ss>>name;
+					ss>>mat;
+
+					ss>>x;
+					ss>>y;
+					ss>>z;
+
+					glm::vec3 p1_ = glm::vec3(x,y,z);
+
+					ss>>x;
+					ss>>y;
+					ss>>z;
+
+					glm::vec3 p2_ = glm::vec3(x,y,z);
+
+					ss>>x;
+					ss>>y;
+					ss>>z;
+
+					glm::vec3 p3_ = glm::vec3(x,y,z);
+					
+					std::shared_ptr<Shape> triangle(new Triangle(p1_, p2_, p3_, name, scene.find_material(mat)));
+					scene.shape_map[name] = triangle;
 				}
 
 				if(keyword == "light"){
