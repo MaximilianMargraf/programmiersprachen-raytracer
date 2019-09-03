@@ -60,7 +60,7 @@ void Renderer::render()
 					shooty.direction = glm::normalize(shooty.direction);
 
 					// this just changes the ray according to the camera transformation
-					shooty = transformRay(scene.find_camera(scene.cam_name)->camTrans(), shooty);
+					//shooty=transformRay(scene.find_camera(scene.cam_name)->camTrans(),shooty);
 
 					// we interpolate with 4 color values
 					p.color += raytrace(shooty) * 0.25f;

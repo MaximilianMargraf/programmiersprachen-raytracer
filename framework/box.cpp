@@ -106,21 +106,25 @@ HitPoint Box::intersect(Ray const& r){
 
 	float tmin = -INFINITY, tmax = INFINITY;
 
+	//check if the ray is between the x boundaries
 	float t1 = (min.x - ray.origin.x)/ray.direction.x;
 	float t2 = (max.x - ray.origin.x)/ray.direction.x;
 	tmin = std::max(tmin,std::min(t1,t2));
 	tmax = std::min(tmax,std::max(t1,t2));
 
+	// check if ray is between y boundaries
 	t1 = (min.y - ray.origin.y)/ray.direction.y;
 	t2 = (max.y - ray.origin.y)/ray.direction.y;
 	tmin = std::max(tmin,std::min(t1,t2));
 	tmax = std::min(tmax,std::max(t1,t2));
 
+	// check if ray is between z boundaries
 	t1 = (min.z - ray.origin.z)/ray.direction.z;
 	t2 = (max.z - ray.origin.z)/ray.direction.z;
 	tmin = std::max(tmin,std::min(t1,t2));
 	tmax = std::min(tmax,std::max(t1,t2));
 
+	// if the box was intersected, calculate everything needed
 	if (tmax > std::max(0.0F, tmin))
 	{
 		hit.distance = sqrt(tmin*tmin*(
@@ -137,8 +141,8 @@ HitPoint Box::intersect(Ray const& r){
 									glm::vec4(hit.intersection_point,1.0));
 		hit.normal = glm::normalize(glm::vec3(
 				glm::transpose(world_transformation_inv_)*glm::vec4(hit.normal, 0.0)));
+		hit.direction = glm::normalize(r.direction);
 	}
-	//std::cout<<"return HitPoint\n";
 	return hit;
 }
 

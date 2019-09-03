@@ -73,6 +73,7 @@ HitPoint Sphere::intersect(Ray const& rey){
 	float distance = 0.0f;
 
 	// apply inverse of the matrix to the ray
+	///*
 	Ray ray = transformRay(world_transformation_inv_, rey);
 
 	// do intersection with ray in the objects coordinate system
@@ -90,6 +91,18 @@ HitPoint Sphere::intersect(Ray const& rey){
 	hitpoint.normal = glm::normalize(b_normal);
 	// correct intersection point is M * p
 	hitpoint.intersection_point = glm::vec3(world_transformation_* glm::vec4{hitpoint.intersection_point, 1.0f});
+	hitpoint.direction = glm::normalize(rey.direction);
+	//*/
+
+	/*
+	hitpoint.intersected = glm::intersectRaySphere(rey.origin, glm::normalize(rey.direction), center, radius * radius, distance);
+	hitpoint.name = name_;
+	hitpoint.material = material;
+	hitpoint.distance = distance;
+
+	hitpoint.intersection_point = rey.origin + distance * glm::normalize(rey.direction);
+	hitpoint.normal =  hitpoint.intersection_point - center;
+	*/
 
 	return hitpoint;
 }
