@@ -73,7 +73,6 @@ HitPoint Sphere::intersect(Ray const& rey){
 	float distance = 0.0f;
 
 	// apply inverse of the matrix to the ray
-	///*
 	Ray ray = transformRay(world_transformation_inv_, rey);
 
 	// do intersection with ray in the objects coordinate system
@@ -92,17 +91,6 @@ HitPoint Sphere::intersect(Ray const& rey){
 	// correct intersection point is M * p
 	hitpoint.intersection_point = glm::vec3(world_transformation_* glm::vec4{hitpoint.intersection_point, 1.0f});
 	hitpoint.direction = glm::normalize(rey.direction);
-	//*/
-
-	/*
-	hitpoint.intersected = glm::intersectRaySphere(rey.origin, glm::normalize(rey.direction), center, radius * radius, distance);
-	hitpoint.name = name_;
-	hitpoint.material = material;
-	hitpoint.distance = distance;
-
-	hitpoint.intersection_point = rey.origin + distance * glm::normalize(rey.direction);
-	hitpoint.normal =  hitpoint.intersection_point - center;
-	*/
 
 	return hitpoint;
 }
@@ -122,15 +110,13 @@ void Sphere::translate(glm::vec3 const& translation){
 // this function seems to not be called
 void Sphere::scale(glm::vec3 const& factor){
 	//radius = radius * factor.x;
-	//std::cout<<radius;
 	glm::mat4 scale;
 	scale[0] = glm::vec4{factor.x, 0.0f, 0.0f, 0.0f};
 	scale[1] = glm::vec4{0.0f, factor.y, 0.0f, 0.0f};
 	scale[2] = glm::vec4{0.0f, 0.0f, factor.z, 0.0f};
 	scale[3] = glm::vec4{0.0f, 0.0f, 0.0f, 1.0f};
-	world_transformation_ = scale * world_transformation_;
+	world_transformation_ = world_transformation_ * scale;
 	world_transformation_inv_ = glm::inverse(world_transformation_);
-	//std::cout<<"Sphere Position: "<<center.x<<", "<<center.y<<", "<<center.z<<"\n";
 }
 
 std::ostream& operator<<(std::ostream& os, Sphere const& s){

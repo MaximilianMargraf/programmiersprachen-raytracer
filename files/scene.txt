@@ -1,14 +1,14 @@
-define material red 1 0 0 0.7 0.2 0.2 0.3 0.3 0.3 5 0.999
+define material red 1 0 0 0.7 0.2 0.2 0.3 0.3 0.3 9 0.999
 define material green 0 1 0 0 1 0 0 1 0 3 0.6
 define material white 1 1 1 0.7 0.7 0.7 0.3 0.3 0.3 6 0.9
 define material blue 0 0 1 0 0 1 0 0 1 10 0.9
-define sphere Sphere1 white 0 0 -18 3
-define sphere Sphere2 blue 3 3 -22 2
-define sphere Sphere3 green -1 -1 -11 1
-define box Box1 red -8.0 -8.5 -50 8.0 -8.0 -5
-#define triangle Tri1 white -2 -3.5 -10 -3 -4.5 -8 -3.5 -5 -12
+#define sphere Sphere1 white 0 0 0 1
+#define sphere Sphere2 blue 3 3 -22 2
+#define sphere Sphere3 green -1 -1 -11 1
+#define box Box1 red -8.0 -8.5 -50 8.0 -8.0 -5
+define triangle Tri1 white -2 -3.5 -20 -3 -4.5 -20 -3.5 -5 -20
 define light BlueLight 0 5 -5 0.1 0.5 0.5 0.9
 define light RedLight 0.0 0.0 0.0 0.8 0.5 0.5 0.9
 define camera eye 60.0 0.0 0.0 5.0 0.0 0.0 -1.0 0.0 1.0 0.0
 ambient 0.1 0.1 0.1
-render eye image.ppm 1000 600
+render eye image.ppm 800 500

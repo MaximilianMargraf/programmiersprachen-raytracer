@@ -156,7 +156,6 @@ Color Renderer::shade(HitPoint const& hit) const{
 
 	// Reflection of light from other object, this will be executed up to 3 times
 	if(depth > 0){
-		//std::cout<<"Depth: "<<depth<<"\n";
 		--depth;
 		Color rs{0.0, 0.0, 0.0};
 		// angle between camera ray and normal of intersection point

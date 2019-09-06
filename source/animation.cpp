@@ -17,8 +17,8 @@
 // executing the animation.cpp will take some sweet time depending on the rig
 int main(int argc, char* argv[])
 {
-	int seconds = 5;
-	int frames = 24 * seconds;
+	int seconds = 1;
+	int frames = 6 * seconds;
 
 	std::string filepath = "../../files/animation.txt";
 	Scene scene = sdfloader(filepath);
@@ -32,7 +32,10 @@ int main(int argc, char* argv[])
 		Scene scene = sdfloader(filepath);
 
 		// apply translation to sphere
-		scene.find_shape("Sphere3")->translate(circle1);
+		//scene.find_shape("Sphere3")->translate(circle1);
+
+		glm::vec3 ff{((i+1)), ((i+1)), ((i+1))};
+		scene.find_shape("Sphere1")->scale(ff);
 
 		// save the pic with a different filename each time
 		scene.file_name = "animation"+std::to_string((int)i)+".ppm";
